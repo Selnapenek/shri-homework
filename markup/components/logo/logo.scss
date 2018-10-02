@@ -1,0 +1,8 @@
+.icon__logo{
+  //@include bg-svg($Яндекс-Дом);
+  @include bg($dom-logo);
+
+  @media screen and (max-width: 375px) {
+    margin-left: 20px;
+  }
+}

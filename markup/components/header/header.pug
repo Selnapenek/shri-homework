@@ -1,0 +1,7 @@
+include ../menu/menu.pug
+include ../logo/logo.pug
+
+mixin header(data)
+    header.header
+        +logo.header__item()
+        +menu.header__item()

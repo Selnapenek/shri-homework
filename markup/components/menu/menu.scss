@@ -1,0 +1,50 @@
+.menu{
+  display: flex;
+  align-items: center;
+  margin-left: 39px;
+
+  .menu__item{
+    font-size: 16px;
+    opacity: 0.6;
+    line-height: 20px;
+    padding-left: 13px;
+    padding-right: 13px;
+
+    .menu__link_active{
+      color: $black;
+    }
+
+    @media screen and (max-width: 375px) {
+      margin: 10px;
+    }
+  }
+
+  @media screen and (max-width: 375px) {
+    flex-direction: column;
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+    align-self: flex-end;
+    align-items: end;
+  }
+}
+
+.menu__icon{
+  @include bg($icon-list-m-png);
+  display: none;
+  cursor: pointer;
+
+  @media screen and (max-width: 375px) {
+    display: initial;
+    position: absolute;
+    right: 20px;
+  }
+}
+
+.menu_show {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+}
+
