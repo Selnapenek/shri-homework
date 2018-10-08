@@ -193,18 +193,19 @@ const touchmoveHandler = (ev) => {
                   if (globalVars.evCache[i].identifier == ev.touches[0].identifier) point1 = i;
                   if (globalVars.evCache[i].identifier == ev.touches[1].identifier) point2 = i;
                 }
-
                 if (point1 >=0 && point2 >= 0) {
                 
                     // Calculate the difference between the start and move coordinates
                     const diff1X = Math.abs(globalVars.evCache[point1].clientX - ev.touches[0].clientX);
+                    const diff2X = Math.abs(globalVars.evCache[point2].clientX - ev.touches[1].clientX);
+
                     //const diff1Y = Math.abs(globalVars.evCache[point1].clientY - ev.touches[0].clientY);
 
                     const prevDiff = Math.abs(globalVars.evCache[point1].clientX - globalVars.evCache[point2].clientX );
                     const curDiff = Math.abs(ev.touches[0].clientX - ev.touches[1].clientX );;
 
                     // This threshold is device dependent as well as application specific
-                    const PINCH_THRESHHOLD_X = ev.target.clientWidth / 35;
+                    const PINCH_THRESHHOLD_X = ev.target.clientWidth / 55;
                     const pinchX = diff1X >= PINCH_THRESHHOLD_X && diff2X >= PINCH_THRESHHOLD_X;
 
                     //const rotate = 0;
@@ -230,7 +231,7 @@ const touchmoveHandler = (ev) => {
 
 const touchendHandler = (ev) => {
     ev.preventDefault();
-    let touches = ev.changedTouches;
+    let touches = ev.touches;
 
     for (let i = 0; i < touches.length; i++) {
         let idx = ongoingTouchIndexById(touches[i].identifier);
@@ -238,7 +239,7 @@ const touchendHandler = (ev) => {
         if (idx >= 0) {
             globalVars.evCache.splice(idx, 1);  // remove it; we're done
         }
-      }
+    }
 };
 
 export default function () {
