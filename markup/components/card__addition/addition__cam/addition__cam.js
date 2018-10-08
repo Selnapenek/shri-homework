@@ -65,7 +65,6 @@ const safeParseInt = (val) => {
 const changeElemenStyle = (value, styleKey, strBefore, strAfter) => {
     const prevStyle = safeParseInt(getComputedStyle(globalVars.el)[styleKey]);
     const newStyle = prevStyle + parseInt(value);
-    console.log(prevStyle + '  ' + newStyle);
     globalVars.el.style[styleKey] = strBefore + newStyle + strAfter;
 };
 
@@ -94,6 +93,7 @@ const pointermoveHandler = (ev) => {
 
             break;
         }
+        // TODO: Интерполировать tochevents на pointerevents
         // If two pointers are down, check for pinch gestures or rotate
         if (globalVars.evCache.length === 2) {
             // Calculate the distance and angle between the two pointers
@@ -186,12 +186,15 @@ function ongoingTouchIndexById(idToFind) {
     return -1;    // not found
 }
 
+// Что-бы без лишних данных было событие
 function copyTouch(touch) {
     return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY,
-             clientX: touch.clientX, clientY:touch.clientY };
+             clientX: touch.clientX, clientY:touch.clientY,
+             rotationAngle: touch.rotationAngle
+            };
 }
 
-// Toch events TODO: привести к общему времени/много повторяющегося кода
+// Toch events TODO: привести к общему типу/много повторяющегося кода
 const touchstartHandler = (ev) => {
     ev.preventDefault();
     setState(ev);
@@ -224,6 +227,7 @@ const touchmoveHandler = (ev) => {
                   if (globalVars.evCache[i].identifier == ev.touches[0].identifier) point1 = i;
                   if (globalVars.evCache[i].identifier == ev.touches[1].identifier) point2 = i;
                 }
+
                 if (point1 >=0 && point2 >= 0) {
                 
                     // Calculate the difference between the start and move coordinates
@@ -236,12 +240,20 @@ const touchmoveHandler = (ev) => {
                     // This threshold is device dependent as well as application specific
                     const PINCH_THRESHHOLD_X = ev.target.clientWidth / 35;
                     const pinchX = diff1X >= PINCH_THRESHHOLD_X && diff2X >= PINCH_THRESHHOLD_X;
+
+                    const rotate = 0;
+
                     // TODO: маштабировать по диагонали, а не только по ширине
-                    if (pinchX){
+                    if (pinchX) {
                         const signDiff = curDiff > prevDiff ? 1 : -1;
                         const coefficient = signDiff * (0.2);
                         changeElemenStyle( coefficient * (diff1X), 'backgroundSize', '', '%');
                     }
+
+                    // TODO:
+                    /* if(rotate) {
+
+                    } */
                 }
 
             }
