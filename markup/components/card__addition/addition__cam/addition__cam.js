@@ -1,3 +1,39 @@
+var logEvents = true;
+
+    // Logging/debugging functions
+    function enableLog(ev) {
+    logEvents = logEvents ? false : true;
+    }
+
+    function log(prefix, ev) {
+        if (!logEvents) return;
+        var o = document.getElementsByTagName('output')[0];
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        var s;
+        if(iOS){
+            s = prefix + ' ' + ev;
+        }else{
+            s = prefix + ": pointerID = " + ev.pointerId +
+                        " ; pointerType = " + ev.pointerType +
+                        " ; isPrimary = " + ev.isPrimary;
+        }
+        o.innerHTML += "<div><p>" + s + "</p></div>";
+
+    } 
+
+    function clearLog(event) {
+        var o = document.getElementsByTagName('output')[0];
+        o.innerHTML = "";
+    }
+
+    const start = document.querySelector('#log');
+    start.onclick=enableLog;
+    const clear = document.querySelector('#clearlog');
+    clear.onclick=clearLog;
+
+
+
+
 // Глобальные переменны состояния - для определения жеста и коордиат
 const globalVars = {
     currentState: null, // Координаты x,y нажатия
@@ -141,16 +177,94 @@ const pointerupHandler = (ev) => {
     stopMove();
 };
 
+function ongoingTouchIndexById(idToFind) {
+    for (var i = 0; i < globalVars.evCache.length; i++) {
+      let id =  globalVars.evCache[i].identifier;
+      
+      if (id == idToFind) {
+        return i;
+      }
+    }
+    return -1;    // not found
+}
+
+function copyTouch(touch) {
+    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY,
+             clientX: touch.clientX, clientY:touch.clientY };
+}
+
+// Toch events TODO: привести к общему времени/много повторяющегося кода
+const touchstartHandler = (ev) => {
+    ev.preventDefault();
+    setState(ev);
+
+    let touches = ev.changedTouches;
+    for (let i = 0; i < touches.length; i++) {
+        globalVars.evCache.push(copyTouch(touches[i]));
+    }
+}
+
+const touchmoveHandler = (ev) => {
+    ev.preventDefault();
+
+    let touches = ev.changedTouches;
+
+    log('a',globalVars.evCache.length);
+
+    for (let i = 0; i < touches.length; i++) {
+        let idx = ongoingTouchIndexById(touches[i].identifier);
+        if (idx >= 0) {
+            const startX = globalVars.evCache[idx].clientX;
+            const startY = globalVars.evCache[idx].clientY;
+            const dx = touches[i].clientX - startX;
+            const dy = touches[i].clientY - startY;
+            const coefficient = 1;
+            
+            changeElemenStyle(dx * coefficient, 'backgroundPositionX', '', 'px');
+            changeElemenStyle(dy * coefficient, 'backgroundPositionY', '', 'px');
+
+
+            globalVars.evCache.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
+        } else {
+            log('a','na');
+        }
+    }
+};
+
+const touchendHandler = (ev) => {
+    ev.preventDefault();
+    let touches = ev.changedTouches;
+
+    for (let i = 0; i < touches.length; i++) {
+        let idx = ongoingTouchIndexById(touches[i].identifier);
+    
+        if (idx >= 0) {
+            globalVars.evCache.splice(idx, 1);  // remove it; we're done
+        }
+      }
+};
+
 export default function () {
     const cam = document.querySelector('.addition__cam__img');
     globalVars.el = cam;
 
-    cam.onpointerdown = pointerdownHandler;
-    cam.onpointermove = pointermoveHandler;
-    cam.onpointerup = pointerupHandler;
-    cam.onpointercancel = pointerupHandler;
-    cam.onpointerout = pointerupHandler;
-    cam.onpointerleave = pointerupHandler;
+    let iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // PEP не работат по iOS
+    if (iOS) {
+        log("IOS",'s');
+        cam.ontouchstart = touchstartHandler;
+        cam.ontouchmove = touchmoveHandler;
+        cam.ontouchend = touchendHandler;
+        cam.ontouchend = touchendHandler;
+    } else {
+        log("moper",'s');
+        cam.onpointerdown = pointerdownHandler;
+        cam.onpointermove = pointermoveHandler;
+        cam.onpointerup = pointerupHandler;
+        cam.onpointercancel = pointerupHandler;
+        cam.onpointerout = pointerupHandler;
+        cam.onpointerleave = pointerupHandler;
+    }
 
 }
 
