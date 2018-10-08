@@ -1,0 +1,18 @@
+include ../card/card.pug
+
+// data - array of events (cards)
+mixin main(data)
+    main.main
+        div.main__title
+            h1 Лента событий
+        //#main.test
+        .card__container
+            - let events = data;
+
+            each val in events
+                +card(val)
+            else 
+                div There are no values
+
+
+        

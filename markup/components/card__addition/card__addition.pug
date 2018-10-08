@@ -1,0 +1,22 @@
+include addition__stats/addition__stats.pug
+include addition__thermal/addition__thermal.pug
+include addition__music/addition__music.pug
+include addition__fridge/addition__fridge.pug
+include addition__cam/addition__cam.pug
+
+- let additionClasses = 'card__addition card__row';
+
+mixin card__addition(type, data)
+        case type
+            when 'stats'
+                +addition__stats(data)(class=additionClasses)
+            when 'thermal'
+                +addition__thermal(data)(class=additionClasses)
+            when 'music'
+                +addition__music(data)(class=additionClasses)
+            when 'fridge'
+                +addition__fridge(data)(class=additionClasses)
+            when 'cam'
+                +addition__cam(data)(class=additionClasses)
+            default
+                p ...404...

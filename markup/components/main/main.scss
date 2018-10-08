@@ -1,0 +1,57 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    min-width: 1110px;
+    padding: 0 20px;
+
+    // Mobile
+    @media screen and (max-width: $break-point_mb) {
+        min-width: auto;
+        padding-top: 50px; 
+    }
+
+    // Tablets - Laptop
+    @media screen and (min-width: $break-point_mb) and (max-width: $break-point_lp) {
+        min-width: auto;
+    }
+
+    // 2k display
+    @media screen and (min-width: $break-point_d) {
+        padding: 0 150px;
+    }
+
+    // 2k+ display
+    @media screen and (min-width: $break-point_2d) {
+        padding: 0 200px;
+    }
+
+    .main__title {
+        @include grid-cl6;
+
+        // Mobile
+        @media screen and (max-width: $break-point_mb) {
+            align-self: baseline;
+        }
+
+        // Tablets - Laptop
+        @media screen and (min-width: $break-point_mb) and (max-width: $break-point_lp) {
+            margin-right: auto;
+            display: block;     // (костыль) В две строки переводилось на moz из-за grid
+        }
+
+        // 2k display
+        @media screen and (min-width: $break-point_d) {
+            margin-right: auto;
+            display: block;     
+        }
+        
+        h1 {
+            font-size: 2.25rem; 
+            grid-column: span 6;
+        }
+    }
+
+}
+
