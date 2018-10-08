@@ -1,37 +1,3 @@
-var logEvents = true;
-
-    // Logging/debugging functions
-    function enableLog(ev) {
-    logEvents = logEvents ? false : true;
-    }
-
-    function log(prefix, ev) {
-        if (!logEvents) return;
-        let o = document.getElementsByTagName('output')[0];
-        let iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        let s;
-        if(iOS){
-            s = prefix + ' ' + ev;
-        }else{
-            s = prefix + ": pointerID = " + ev.pointerId +
-                        " ; pointerType = " + ev.pointerType +
-                        " ; isPrimary = " + ev.isPrimary;
-        }
-        o.innerHTML += "<div><p>" + s + "</p></div>";
-
-    } 
-
-    function clearLog(event) {
-        var o = document.getElementsByTagName('output')[0];
-        o.innerHTML = "";
-    }
-
-    const start = document.querySelector('#log');
-    start.onclick=enableLog;
-    const clear = document.querySelector('#clearlog');
-    clear.onclick=clearLog;
-
-
 // Глобальные переменны состояния - для определения жеста и коордиат
 const globalVars = {
     currentState: null, // Координаты x,y нажатия
@@ -232,7 +198,7 @@ const touchmoveHandler = (ev) => {
                 
                     // Calculate the difference between the start and move coordinates
                     const diff1X = Math.abs(globalVars.evCache[point1].clientX - ev.touches[0].clientX);
-                    const diff1Y = Math.abs(globalVars.evCache[point1].clientY - ev.touches[0].clientY);
+                    //const diff1Y = Math.abs(globalVars.evCache[point1].clientY - ev.touches[0].clientY);
 
                     const prevDiff = Math.abs(globalVars.evCache[point1].clientX - globalVars.evCache[point2].clientX );
                     const curDiff = Math.abs(ev.touches[0].clientX - ev.touches[1].clientX );;
@@ -241,7 +207,7 @@ const touchmoveHandler = (ev) => {
                     const PINCH_THRESHHOLD_X = ev.target.clientWidth / 35;
                     const pinchX = diff1X >= PINCH_THRESHHOLD_X && diff2X >= PINCH_THRESHHOLD_X;
 
-                    const rotate = 0;
+                    //const rotate = 0;
 
                     // TODO: маштабировать по диагонали, а не только по ширине
                     if (pinchX) {
