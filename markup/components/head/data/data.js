@@ -1,6 +1,6 @@
-head: {
+let dataHead = {head: {
     defaults: {
-        title: 'Яндекс Дом',
+        title: 'Яндекс дом',
         useSocialMetaTags: true
     }
-}
+}}

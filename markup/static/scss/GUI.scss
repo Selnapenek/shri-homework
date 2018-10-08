@@ -1,2 +1,275 @@
 // GUI stylies of the project
 // For example, styles of the links, buttons and so on.
+
+a {
+    text-decoration: none;
+    color:$gray;
+}
+
+// Buttons
+.button {
+  min-width: 130px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  font-size: 1,25rem;
+  font-weight: bold;
+  background-color: $bg-gray;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 2px 2px 10px $black;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  @media screen and (max-width: $break-point_mb) {
+    font-size: 1.5rem;
+  }
+}
+
+.button_submit {
+  background-color: $bg-yellow;
+}
+
+// Images
+.img_responsive {
+  width: 100%;
+  height: auto;
+}
+
+.img_br20 {
+  border-radius: 20px;
+}
+
+// Обрезка многострочного текста
+.two-lines-text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; 
+}
+
+// Icons
+.icon_ac-warning {
+  @include bg-svg($ac);
+}
+
+.icon_ac{
+  @include bg-svg($air-conditioner);
+}
+
+.icon_battery {
+  @include bg-svg($battery);
+}
+
+.icon_cam-warning {
+  @include bg-svg($cam-white);
+}
+
+.icon_cam{
+  @include bg-svg($cctv);
+}
+
+.icon_close-copy {
+  @include bg-svg($close-copy);
+}
+
+.icon_cross-white {
+  @include bg-svg($cross-white);
+}
+
+.icon_cross {
+  @include bg-svg($cross);
+}
+
+.icon_fridge {
+  @include bg-svg($fridge);
+}
+
+.icon_google-home {
+  @include bg-svg($google-home);
+}
+
+.icon_hot-kettle {
+  @include bg-svg($hot-kettle);
+}
+
+.icon_kettle {
+  @include bg-svg($kettle);
+}
+
+.icon_key {
+  @include bg-svg($key);
+}
+
+.icon_line-chart {
+  @include bg-svg($line-chart);
+}
+
+.icon_music {
+  @include bg-svg($music);
+}
+
+.icon_next-white {
+  @include bg-svg($next-white);
+}
+
+.icon_next {
+  @include bg-svg($next);
+}
+
+.icon_prev-btn {
+  @include bg-svg($prev);
+}
+
+.icon_next-btn {
+  @include bg-svg($prev);
+  transform: scale(-1, -1);
+
+}
+
+.icon_robot-cleaner {
+  @include bg-svg($robot-cleaner);
+}
+
+.icon_router {
+  @include bg-svg($router);
+}
+
+.icon_shape {
+  @include bg-svg($shape);
+}
+
+.icon_smart-home {
+  @include bg-svg($smart-home);
+}
+
+.icon_stats {
+  @include bg-svg($stats);
+}
+
+.icon_temperature {
+  @include bg-svg($temperature);
+}
+
+.icon_thermal {
+  @include bg-svg($thermal);
+}
+
+.icon_wifi {
+  @include bg-svg($wifi);
+}
+
+// Inputs
+
+input[type=range] {
+  -webkit-appearance: none; 
+  width: 100%; 
+}
+ 
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+ 
+input[type=range]:focus {
+  outline: none; 
+}
+ 
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+// Input range
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 9.45px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #979797;
+  border-radius: 25px;
+  border: 0px solid #ffffff;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0.6px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid rgba(0, 0, 0, 0);
+  height: 20px;
+  width: 12px;
+  border-radius: 4px;
+  background: #d8d8d8;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -9.45px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #cdcdcd;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 1.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #979797;
+  border-radius: 25px;
+  border: 0px solid #ffffff;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 0.6px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid rgba(0, 0, 0, 0);
+  height: 20px;
+  width: 12px;
+  border-radius: 4px;
+  background: #d8d8d8;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 1.1px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #616161;
+  border: 0px solid #ffffff;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #979797;
+  border: 0px solid #ffffff;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 0px 0px 0.6px #000000, 0px 0px 0px #0d0d0d;
+  border: 0px solid rgba(0, 0, 0, 0);
+  height: 20px;
+  width: 12px;
+  border-radius: 4px;
+  background: #d8d8d8;
+  cursor: pointer;
+  height: 1.1px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #979797;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #cdcdcd;
+}

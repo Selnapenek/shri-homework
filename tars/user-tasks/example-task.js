@@ -36,4 +36,15 @@ module.exports = function () {
         // You can return callback, if you can't return pipe
         // done(null);
     });
+
+    
 };
+
+// module.exports = function () {
+//     return gulp.task("html:generatePages", function () {
+//         return gulp.src("./partials/pages/**/*.pug")
+//             .pipe($.data(function (file) { return { require: require } }))
+//             .pipe($.pug())
+//             .pipe(gulp.dest(paths.dest));
+//     });
+// }

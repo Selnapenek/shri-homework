@@ -1,8 +1,9 @@
 mixin menu(data)
-    // Надо было через nav делать.
-    .menu
+    nav.menu
+        .menu__item.menu__item_active
+            a.menu__link.link(href="#") События
         .menu__item
-            a.menu__link.menu__link_active.link(href="#") Cводка
+            a.menu__link.link(href="#") Cводка
         .menu__item
             a.menu__link.link(href="#") Устройство
         .menu__item

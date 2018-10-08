@@ -1,18 +1,22 @@
 {
-  "name": "awesome_project",
+  "name": "shri-hm1-rd",
   "version": "1.0.0",
-  "description": "Your awesome project description",
+  "description": "",
   "main": "gulpfile.js",
   "directories": {},
   "dependencies": {
-    "babel-preset-es2015": "^6.24.1"
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
   },
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "pepjs": "github:jquery/pep"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Solomin Vyacheslav",
   "license": "ISC"
 }

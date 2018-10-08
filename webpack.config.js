@@ -21,7 +21,8 @@ let preLoaders = [
 let loaders = [{
     test: /\.json$/,
     loader: 'json'
-}];
+    }
+];
 let plugins = [
     new webpack.DefinePlugin({
         'process.env': {
@@ -66,7 +67,7 @@ if (tars.config.js.lint) {
     preLoaders.push(
         {
             test: /\.js$/,
-            loader: 'eslint-loader',
+            loaders: ['babel-loader', 'eslint-loader'],
             include: `${cwd}/markup`
         }
     );
@@ -75,7 +76,7 @@ if (tars.config.js.lint) {
 if (tars.config.js.useBabel) {
     loaders.push(
         {
-            test: /\.js$/,
+            test: /\.(js|jsx)$/,
             loader: 'babel',
             include: /markup/
         }
@@ -127,6 +128,10 @@ module.exports = {
     devtool: generateSourceMaps ? sourceMapsType : null,
 
     watch: tars.options.watch.isActive && !tars.config.js.webpack.useHMR,
+
+    watchOptions:{
+        aggregateTimeout: 100
+    },
 
     module: {
         preLoaders,

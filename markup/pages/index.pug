@@ -1,16 +1,26 @@
 doctype html
 html(class="no-js", lang="ru")
-
     include ../components/head/head.pug
     include ../components/header/header.pug
+    include ../components/main/main.pug
     include ../components/footer/footer.pug
 
     head
         +head(head.defaults)
+        script(src='https://code.jquery.com/pep/0.4.3/pep.js')
     body.page
         |%=symbols=%
 
         +header()
+
+        +main(main.events)
+
+        +footer()
+
+        //- <button id="log">Start/Stop event logging</button>
+        //- <button id="clearlog">Clear the log</button>
+        //- <p></p>
+        //- <output></output>
 
         script(src='%=static=%js/separate-js/svg4everybody.min.js')
         script svg4everybody();

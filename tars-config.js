@@ -38,7 +38,7 @@ module.exports = {
         }
     },
     "notifyConfig": {
-        "useNotify": false,
+        "useNotify": true,
         "title": "TARS notification",
         "sounds": {},
         "taskFinishedText": "Task finished at: "
