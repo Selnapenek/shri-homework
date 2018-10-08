@@ -1,8 +1,8 @@
 
 .test{
-    height: 300px;
+    display: flex;
+    min-height: 50px;
     width: 100%;
-    background: green;
-    
+    padding: 20px;
     touch-action: none;
 }

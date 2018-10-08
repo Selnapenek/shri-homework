@@ -12,7 +12,9 @@
         touch-action: none;
 
         -webkit-overflow-scrolling: none;
-        -webkit-touch-callout: none; 
+        -webkit-touch-callout: none;  
+
+        transition: ease;
     }
 }
 

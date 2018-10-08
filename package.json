@@ -5,12 +5,10 @@
   "main": "gulpfile.js",
   "directories": {},
   "dependencies": {
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "babel-preset-es2015": "^6.24.1"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
     "gulp": "^3.9.1",
     "pepjs": "github:jquery/pep"
   },
