@@ -1,39 +1,37 @@
 // Log events flag
-var logEvents = true;
+let logEvents = true;
 
 // Logging/debugging functions
-function enableLog(ev) {
-logEvents = logEvents ? false : true;
+function enableLog() {
+    logEvents = logEvents ? false : true;
 }
 
 function log(prefix) {
-    if (!logEvents) return;
+    if (!logEvents) {
+        return;
+    }
     let o = document.getElementsByTagName('output')[0];
-/*     let s = prefix + ": pointerID = " + ev.pointerId +
-                    " ; pointerType = " + ev.pointerType +
-                    " ; isPrimary = " + ev.isPrimary; */
     let s = prefix;
-    o.innerHTML += "<div>" + s + "<div>";
-} 
+    o.innerHTML += '<div>' + s + '<div>';
+}
 
 function clearLog(event) {
     let o = document.getElementsByTagName('output')[0];
-    o.innerHTML = "";
+    o.innerHTML = '';
 }
 
 const start = document.querySelector('#log');
-start.onclick=enableLog;
+start.onclick = enableLog;
 const clear = document.querySelector('#clearlog');
-clear.onclick=clearLog;
-
+clear.onclick = clearLog;
 
 // Глобальные переменны состояния - для определения жеста и коордиат
 const globalVars = {
     currentState: null, // Координаты x,y нажатия
-    evCache: [],        // Массив для определения мультитач событий
-    prevDiff: -1,       // Расстояние между двумя пальцами
-    el: null,           // Элеменкт с которым будут происходить изменения
-    elLimit: {          // Ограничения css свойств элемента 
+    evCache: [], // Массив для определения мультитач событий
+    prevDiff: -1, // Расстояние между двумя пальцами
+    el: null, // Элеменкт с которым будут происходить изменения
+    elLimit: { // Ограничения css свойств элемента
         MaxWidth: 0,
         MinWidth: 0,
         MaxHeight: 0,
@@ -63,43 +61,43 @@ const getDiffXY = (x, y) => {
 
 // Для того что бы достать значение яркости из css фильтра
 const safeParseInt = (val) => {
-    return parseInt(isNaN(val) ? val.replace(/[^-\d]\.+/g, '') : val);
+    return parseInt(isNaN(val) ? val.replace(/[^-\d]\.+/g, '') : val, 10);
 };
 
 // Округление до 2 знака
-const roundFloat = (number) =>{
-    return Math.round(number * 100)/100;
-}
+const roundFloat = (number) => {
+    return Math.round(number * 100) / 100;
+};
 
 /**
  * Изменение css стиля элемента
- * @param {number} value 
- * @param {string} styleKey 
- * @param {string} strBefore 
- * @param {string} strAfter 
+ * @param {number} value
+ * @param {string} styleKey
+ * @param {string} strBefore
+ * @param {string} strAfter
  * @param {Array(2)} limitationMinMax - ограничения, limitationMinMax[0] - min, limitationMinMax[1] - max
  */
 const changeElemenStyle = (el, value, styleKey, strBefore, strAfter, ...limitationMinMax) => {
-    if(styleKey === 'transform'){
-        return; 
+    if (styleKey === 'transform') {
+        return;
     }
 
     const prevStyle = safeParseInt(getComputedStyle(el)[styleKey]);
-    let newStyle = prevStyle + parseInt(value);
+    let newStyle = prevStyle + parseInt(value, 10);
     // Ограничение на стилевые параметры
 
-    if(limitationMinMax.length === 2){
+    if (limitationMinMax.length === 2) {
         newStyle = newStyle < limitationMinMax[0] ? limitationMinMax[0] : newStyle;
         newStyle = newStyle > limitationMinMax[1] ? limitationMinMax[1] : newStyle;
     }
     el.style[styleKey] = strBefore + newStyle + strAfter;
 };
 
-/** Получим transform: matrix в виде массива 
+/** Получим transform: matrix в виде массива
  * @param {int} el - ДОМ узел у которого надо достать матрицу transform
  *  @return {string} - matrix[index]
  */
-const getTransformMatrix = (el)  => {
+const getTransformMatrix = (el) => {
     let transform = [...getComputedStyle(el).transform.replace(/,/g, '')];
     let indexToDel = transform.indexOf(')');
     // delete ')'
@@ -121,33 +119,16 @@ const changeElementTransform = (el, value, limitationMinMax) => {
     const matrix = getTransformMatrix(el);
     const newValue = matrix.map( (item, index) => {
         if (isNaN(limitationMinMax[0][index]) && isNaN(limitationMinMax[1][index])) {
-           return roundFloat( parseFloat(item) + value[index]);
-        } else if (parseFloat(item) + value[index]  < limitationMinMax[0][index]) {
-            return roundFloat(limitationMinMax[0][index]); 
+            return roundFloat( parseFloat(item) + value[index]);
+        } else if (parseFloat(item) + value[index] < limitationMinMax[0][index]) {
+            return roundFloat(limitationMinMax[0][index]);
         } else if ( parseFloat(item) + value[index] > limitationMinMax[1][index]) {
-            return roundFloat(limitationMinMax[1][index]); 
+            return roundFloat(limitationMinMax[1][index]);
         } else {
             return roundFloat(parseFloat(item) + value[index]);
         }
     }).join(', ');
-    el.style.transform = 'matrix(' + newValue + ')';    
-};
-
-/**
- * Изменение css свойства transform-origin элемента
- * @param {DOMNode} el - ДОМ узел стиль которого надо изменить   
- * @param {Array(2)} value 
- * @param {Array(2)(2)} limitationMinMax - думаю лишний параметр...но сомневаюсь
- */
-const changeElementTransformOrigin = (el,value, ...limitationMinMax) => {
-   /*  const prevTransformOrigin = getComputedStyle(el).transformOrigin;
-    // ВОПРОС - можно ли писать так код или лучше по этапам разделять?
-    const newTransformOrigin = prevTransformOrigin.split(' ')
-            .map( (item, index) => {
-                const tmp = parseInt(item) + value[index];
-                return tmp+'px';
-            }).join(' ');
-    el.style.transformOrigin = newTransformOrigin; */
+    el.style.transform = 'matrix(' + newValue + ')';
 };
 
 // Pointer event
@@ -164,25 +145,24 @@ const pointermoveHandler = (ev) => {
     }
 
     // Передвижение фона
-    // ПРЕДУПРЕЖДЕНИЕ: поддерживаются только простые перемещения (по горизонтали/вертикали/диагонали), 
+    // ПРЕДУПРЕЖДЕНИЕ: поддерживаются только простые перемещения (по горизонтали/вертикали/диагонали)
     // по сложной тракетории движения пальца отрабатывается не корректно
-    if(globalVars.evCache.length === 1){
+    if (globalVars.evCache.length === 1) {
 
         const {dx, dy} = getDiffXY(ev.clientX, ev.clientY);
         const coefficient = 0.1;
 
-
         const scale = getTransformMatrix(globalVars.el)[0];
         const limits = globalVars.elLimit;
-        const limitX = ev.target.clientWidth*scale - limits.offsetX;
-        const limitY = ev.target.clientHeight*scale - limits.offsetY;
+        const limitX = ev.target.clientWidth * scale - limits.offsetX;
+        const limitY = ev.target.clientHeight * scale - limits.offsetY;
 
-        const martix = [0, 0, 0, 0, dx*coefficient, dy*coefficient];
+        const martix = [0, 0, 0, 0, dx * coefficient, dy * coefficient];
         const limit = [
-            [NaN, NaN, NaN, NaN, -1*limitX, -1*limitY],
+            [NaN, NaN, NaN, NaN, -1 * limitX, -1 * limitY],
             [NaN, NaN, NaN, NaN, 0, 0]
-        ]
-        changeElementTransform(globalVars.el ,martix, limit);
+        ];
+        changeElementTransform(globalVars.el, martix, limit);
     }
 
     // Find this event in the cache and update its record with this event
@@ -204,11 +184,11 @@ const pointermoveHandler = (ev) => {
             denominator += Math.pow(globalVars.evCache[0].clientY, 2);
             denominator = Math.sqrt(denominator);
             denominator *= Math.sqrt(Math.pow(globalVars.evCache[1].clientX, 2) + Math.pow(globalVars.evCache[1].clientY, 2));
-            const angle = Math.acos( (numerator / denominator) ) * 180  / Math.PI;
+            const angle = Math.acos( (numerator / denominator) ) * 180 / Math.PI;
             // Если пальцы уже двигались
             if (globalVars.prevDiff > 0) {
                 const signDiff = curDiff > globalVars.prevDiff ? 1 : -1;
-                const signAng = () => {
+                /* const signAng = () => {
                     // 0 - 90, 90 - 180, 180 - 270, 270 - 360 deg
                     const leftTop = globalVars.currentState.startX > globalVars.evCache[1].clientX &&
                                     globalVars.currentState.startY < globalVars.evCache[1].clientY;
@@ -224,40 +204,32 @@ const pointermoveHandler = (ev) => {
                     } else {
                         return 1;
                     }
-                };
+                }; */
 
-                const PINCH_THRESHHOLD = Math.sqrt(Math.pow(ev.target.clientWidth , 2) + Math.pow(ev.target.clientHeight, 2)) / 15;
-                const pinch = curDiff/2 >= PINCH_THRESHHOLD;
-                
-                // погрешность в 15 градусов - что бы не перепутать зум и поворот
-              /*   if (angle > 15 && angle < 165) {
-                    // Поворот
-                    const coefficient = 0.5 * signAng;
-                    changeElemenStyle(angle * coefficient, 'filter', 'brightness(', '%)'); */
-                //} else 
-                if(pinch){
+                const PINCH_THRESHHOLD = Math.sqrt(Math.pow(ev.target.clientWidth, 2) + Math.pow(ev.target.clientHeight, 2)) / 15;
+                const pinch = curDiff / 2 >= PINCH_THRESHHOLD;
+
+                if (pinch) {
                     // Зум
-                    const coefficient = 5 * globalVars.coefficient * signDiff;
-
-                    const martix = [0.1*signDiff, 0, 0, 0.1*signDiff, 0, 0];
+                    const martix = [0.1 * signDiff, 0, 0, 0.1 * signDiff, 0, 0];
                     const limit = [
                         [0.6, NaN, NaN, 0.6, NaN, NaN],
                         [2, NaN, NaN, 2, 0, 0]
-                    ]
-                    changeElementTransform(globalVars.el ,martix, limit);
+                    ];
+                    changeElementTransform(globalVars.el, martix, limit);
 
                     const scale = getTransformMatrix(globalVars.el)[0];
                     const limits = globalVars.elLimit;
-                    const limitX = ev.target.clientWidth*scale - limits.offsetX;
-                    const limitY = ev.target.clientHeight*scale - limits.offsetY;
+                    const limitX = ev.target.clientWidth * scale - limits.offsetX;
+                    const limitY = ev.target.clientHeight * scale - limits.offsetY;
 
                     // Что бы при зумировании не происходило сдвига
                     const martixClr = [0, 0, 0, 0, 0, 0];
                     const limitClr = [
-                        [NaN, NaN, NaN, NaN, -1*limitX, -1*limitY],
+                        [NaN, NaN, NaN, NaN, -1 * limitX, -1 * limitY],
                         [NaN, NaN, NaN, NaN, 0, 0]
-                    ]
-                    changeElementTransform(globalVars.el ,martixClr, limitClr);
+                    ];
+                    changeElementTransform(globalVars.el, martixClr, limitClr);
                 }
             }
             // Cache the distance for the next move event
