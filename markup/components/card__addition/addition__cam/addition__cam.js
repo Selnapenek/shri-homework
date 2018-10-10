@@ -1,16 +1,55 @@
+// Log events flag
+var logEvents = true;
+
+// Logging/debugging functions
+function enableLog(ev) {
+logEvents = logEvents ? false : true;
+}
+
+function log(prefix) {
+    if (!logEvents) return;
+    let o = document.getElementsByTagName('output')[0];
+/*     let s = prefix + ": pointerID = " + ev.pointerId +
+                    " ; pointerType = " + ev.pointerType +
+                    " ; isPrimary = " + ev.isPrimary; */
+    let s = prefix;
+    o.innerHTML += "<div>" + s + "<div>";
+} 
+
+function clearLog(event) {
+    let o = document.getElementsByTagName('output')[0];
+    o.innerHTML = "";
+}
+
+const start = document.querySelector('#log');
+start.onclick=enableLog;
+const clear = document.querySelector('#clearlog');
+clear.onclick=clearLog;
+
+
 // Глобальные переменны состояния - для определения жеста и коордиат
 const globalVars = {
     currentState: null, // Координаты x,y нажатия
-    evCache: [], // Массив для определения мультитач событий
-    prevDiff: -1, // Расстояние между двумя пальцами
-    el: null // Элеменкт с которым будут происходить изменения
+    evCache: [],        // Массив для определения мультитач событий
+    prevDiff: -1,       // Расстояние между двумя пальцами
+    el: null,           // Элеменкт с которым будут происходить изменения
+    elLimit: {          // Ограничения css свойств элемента 
+        MaxWidth: 0,
+        MinWidth: 0,
+        MaxHeight: 0,
+        MinHeight: 0,
+        offsetX: 0,
+        offsetY: 0
+    }
 };
 
 // Получение координат события
 const setState = (ev) => {
     globalVars.currentState = {
-        startX: ev.clientX,
-        startY: ev.clientY
+        startX: ev.x,
+        startY: ev.y,
+        clientX: ev.clientX,
+        clientY: ev.clientY
     };
 };
 
@@ -27,11 +66,88 @@ const safeParseInt = (val) => {
     return parseInt(isNaN(val) ? val.replace(/[^-\d]\.+/g, '') : val);
 };
 
-// Изменение стиля элемента
-const changeElemenStyle = (value, styleKey, strBefore, strAfter) => {
-    const prevStyle = safeParseInt(getComputedStyle(globalVars.el)[styleKey]);
-    const newStyle = prevStyle + parseInt(value);
-    globalVars.el.style[styleKey] = strBefore + newStyle + strAfter;
+// Округление до 2 знака
+const roundFloat = (number) =>{
+    return Math.round(number * 100)/100;
+}
+
+/**
+ * Изменение css стиля элемента
+ * @param {number} value 
+ * @param {string} styleKey 
+ * @param {string} strBefore 
+ * @param {string} strAfter 
+ * @param {Array(2)} limitationMinMax - ограничения, limitationMinMax[0] - min, limitationMinMax[1] - max
+ */
+const changeElemenStyle = (el, value, styleKey, strBefore, strAfter, ...limitationMinMax) => {
+    if(styleKey === 'transform'){
+        return; 
+    }
+
+    const prevStyle = safeParseInt(getComputedStyle(el)[styleKey]);
+    let newStyle = prevStyle + parseInt(value);
+    // Ограничение на стилевые параметры
+
+    if(limitationMinMax.length === 2){
+        newStyle = newStyle < limitationMinMax[0] ? limitationMinMax[0] : newStyle;
+        newStyle = newStyle > limitationMinMax[1] ? limitationMinMax[1] : newStyle;
+    }
+    el.style[styleKey] = strBefore + newStyle + strAfter;
+};
+
+/** Получим transform: matrix в виде массива 
+ * @param {int} el - ДОМ узел у которого надо достать матрицу transform
+ *  @return {string} - matrix[index]
+ */
+const getTransformMatrix = (el)  => {
+    let transform = [...getComputedStyle(el).transform.replace(/,/g, '')];
+    let indexToDel = transform.indexOf(')');
+    // delete ')'
+    transform.splice(indexToDel, 1);
+    // delete 'matrix('
+    transform.splice(0, 7);
+    let matrixArray = transform.join('').split(' ');
+    return matrixArray;
+};
+
+/**
+ * Изменение css свойства transform элемента
+ * @param {DOMNode} el - ДОМ узел стиль которого надо изменить
+ * @param {Array(6)} value - martix(...)
+ * @param {Array(2)(6)} limitationMinMax - limitationMinMax[0][...] - min, limitationMinMax[1][...] - max,  , если элемент = NaN - ограничения нет
+ * навреное как-то по другому надо было ограничение принимать
+ */
+const changeElementTransform = (el, value, limitationMinMax) => {
+    const matrix = getTransformMatrix(el);
+    const newValue = matrix.map( (item, index) => {
+        if (isNaN(limitationMinMax[0][index]) && isNaN(limitationMinMax[1][index])) {
+           return roundFloat( parseFloat(item) + value[index]);
+        } else if (parseFloat(item) + value[index]  < limitationMinMax[0][index]) {
+            return roundFloat(limitationMinMax[0][index]); 
+        } else if ( parseFloat(item) + value[index] > limitationMinMax[1][index]) {
+            return roundFloat(limitationMinMax[1][index]); 
+        } else {
+            return roundFloat(parseFloat(item) + value[index]);
+        }
+    }).join(', ');
+    el.style.transform = 'matrix(' + newValue + ')';    
+};
+
+/**
+ * Изменение css свойства transform-origin элемента
+ * @param {DOMNode} el - ДОМ узел стиль которого надо изменить   
+ * @param {Array(2)} value 
+ * @param {Array(2)(2)} limitationMinMax - думаю лишний параметр...но сомневаюсь
+ */
+const changeElementTransformOrigin = (el,value, ...limitationMinMax) => {
+   /*  const prevTransformOrigin = getComputedStyle(el).transformOrigin;
+    // ВОПРОС - можно ли писать так код или лучше по этапам разделять?
+    const newTransformOrigin = prevTransformOrigin.split(' ')
+            .map( (item, index) => {
+                const tmp = parseInt(item) + value[index];
+                return tmp+'px';
+            }).join(' ');
+    el.style.transformOrigin = newTransformOrigin; */
 };
 
 // Pointer event
@@ -47,36 +163,48 @@ const pointermoveHandler = (ev) => {
         return;
     }
 
+    // Передвижение фона
+    // ПРЕДУПРЕЖДЕНИЕ: поддерживаются только простые перемещения (по горизонтали/вертикали/диагонали), 
+    // по сложной тракетории движения пальца отрабатывается не корректно
+    if(globalVars.evCache.length === 1){
+
+        const {dx, dy} = getDiffXY(ev.clientX, ev.clientY);
+        const coefficient = 0.1;
+
+
+        const scale = getTransformMatrix(globalVars.el)[0];
+        const limits = globalVars.elLimit;
+        const limitX = ev.target.clientWidth*scale - limits.offsetX;
+        const limitY = ev.target.clientHeight*scale - limits.offsetY;
+
+        const martix = [0, 0, 0, 0, dx*coefficient, dy*coefficient];
+        const limit = [
+            [NaN, NaN, NaN, NaN, -1*limitX, -1*limitY],
+            [NaN, NaN, NaN, NaN, 0, 0]
+        ]
+        changeElementTransform(globalVars.el ,martix, limit);
+    }
+
     // Find this event in the cache and update its record with this event
     for (let i = 0; i < globalVars.evCache.length; i++) {
         if (ev.pointerId === globalVars.evCache[i].pointerId) {
             globalVars.evCache[i] = ev;
-            const {dx, dy} = getDiffXY(ev.clientX, ev.clientY);
-            const coefficient = 0.1;
-
-            changeElemenStyle(dx * coefficient, 'backgroundPositionX', '', 'px');
-            changeElemenStyle(dy * coefficient, 'backgroundPositionY', '', 'px');
-
             break;
         }
-        // TODO: Интерполировать tochevents на pointerevents
         // If two pointers are down, check for pinch gestures or rotate
         if (globalVars.evCache.length === 2) {
             // Calculate the distance and angle between the two pointers
-            const curDiff = () => {
-                const curDiffX = Math.abs(globalVars.evCache[0].clientX - globalVars.evCache[1].clientX);
-                const curDiffY = Math.abs(globalVars.evCache[0].clientY - globalVars.evCache[1].clientY);
-                Math.sqrt(Math.pow(curDiffX, 2) + Math.pow(curDiffY, 2));
-            };
-            const angle = () => {
-                let numerator = globalVars.evCache[0].clientX * globalVars.evCache[1].clientX;
-                numerator += globalVars.evCache[0].clientY * globalVars.evCache[1].clientY;
-                let denominator = Math.pow(globalVars.evCache[0].clientX, 2);
-                denominator += Math.pow(globalVars.evCache[0].clientY, 2);
-                denominator = Math.sqrt(denominator);
-                denominator *= Math.sqrt(Math.pow(globalVars.evCache[1].clientX, 2) + Math.pow(globalVars.evCache[1].clientY, 2));
-                return (Math.acos(numerator / denominator) * 180) / Math.PI;
-            };
+            const curDiffX = Math.abs(globalVars.evCache[0].clientX - globalVars.evCache[1].clientX);
+            const curDiffY = Math.abs(globalVars.evCache[0].clientY - globalVars.evCache[1].clientY);
+            const curDiff = Math.sqrt(Math.pow(curDiffX, 2) + Math.pow(curDiffY, 2));
+
+            let numerator = globalVars.evCache[0].clientX * globalVars.evCache[1].clientX;
+            numerator += globalVars.evCache[0].clientY * globalVars.evCache[1].clientY;
+            let denominator = Math.pow(globalVars.evCache[0].clientX, 2);
+            denominator += Math.pow(globalVars.evCache[0].clientY, 2);
+            denominator = Math.sqrt(denominator);
+            denominator *= Math.sqrt(Math.pow(globalVars.evCache[1].clientX, 2) + Math.pow(globalVars.evCache[1].clientY, 2));
+            const angle = Math.acos( (numerator / denominator) ) * 180  / Math.PI;
             // Если пальцы уже двигались
             if (globalVars.prevDiff > 0) {
                 const signDiff = curDiff > globalVars.prevDiff ? 1 : -1;
@@ -97,15 +225,39 @@ const pointermoveHandler = (ev) => {
                         return 1;
                     }
                 };
+
+                const PINCH_THRESHHOLD = Math.sqrt(Math.pow(ev.target.clientWidth , 2) + Math.pow(ev.target.clientHeight, 2)) / 15;
+                const pinch = curDiff/2 >= PINCH_THRESHHOLD;
+                
                 // погрешность в 15 градусов - что бы не перепутать зум и поворот
-                if (angle > 15 && angle < 165) {
+              /*   if (angle > 15 && angle < 165) {
                     // Поворот
                     const coefficient = 0.5 * signAng;
-                    changeElemenStyle(angle * coefficient, 'filter', 'brightness(', '%)');
-                } else {
+                    changeElemenStyle(angle * coefficient, 'filter', 'brightness(', '%)'); */
+                //} else 
+                if(pinch){
                     // Зум
-                    const coefficient = 0.1 * signDiff;
-                    changeElemenStyle(curDiff * coefficient, 'backgroundSize', '', '%');
+                    const coefficient = 5 * globalVars.coefficient * signDiff;
+
+                    const martix = [0.1*signDiff, 0, 0, 0.1*signDiff, 0, 0];
+                    const limit = [
+                        [0.6, NaN, NaN, 0.6, NaN, NaN],
+                        [2, NaN, NaN, 2, 0, 0]
+                    ]
+                    changeElementTransform(globalVars.el ,martix, limit);
+
+                    const scale = getTransformMatrix(globalVars.el)[0];
+                    const limits = globalVars.elLimit;
+                    const limitX = ev.target.clientWidth*scale - limits.offsetX;
+                    const limitY = ev.target.clientHeight*scale - limits.offsetY;
+
+                    // Что бы при зумировании не происходило сдвига
+                    const martixClr = [0, 0, 0, 0, 0, 0];
+                    const limitClr = [
+                        [NaN, NaN, NaN, NaN, -1*limitX, -1*limitY],
+                        [NaN, NaN, NaN, NaN, 0, 0]
+                    ]
+                    changeElementTransform(globalVars.el ,martixClr, limitClr);
                 }
             }
             // Cache the distance for the next move event
@@ -141,126 +293,24 @@ const pointerupHandler = (ev) => {
     stopMove();
 };
 
-function ongoingTouchIndexById(idToFind) {
-    for (var i = 0; i < globalVars.evCache.length; i++) {
-      let id =  globalVars.evCache[i].identifier;
-      
-      if (id == idToFind) {
-        return i;
-      }
-    }
-    return -1;    // not found
-}
-
-// Что-бы без лишних данных было событие
-function copyTouch(touch) {
-    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY,
-             clientX: touch.clientX, clientY:touch.clientY,
-             rotationAngle: touch.rotationAngle
-            };
-}
-
-// Toch events TODO: привести к общему типу/много повторяющегося кода
-const touchstartHandler = (ev) => {
-    ev.preventDefault();
-    setState(ev);
-
-    let touches = ev.touches;
-    for (let i = 0; i < touches.length; i++) {
-        globalVars.evCache.push(copyTouch(touches[i]));
-    }
-}
-
-const touchmoveHandler = (ev) => {
-    ev.preventDefault();
-    let touches = ev.touches;
-
-    for (let i = 0; i < touches.length; i++) {
-        let idx = ongoingTouchIndexById(touches[i].identifier);
-        if (idx >= 0) {
-            if (touches.length === 1) {
-                const startX = globalVars.evCache[idx].clientX;
-                const startY = globalVars.evCache[idx].clientY;
-                const dx = touches[i].clientX - startX;
-                const dy = touches[i].clientY - startY;
-                const coefficient = 1;
-
-                changeElemenStyle(dx * coefficient, 'backgroundPositionX', '', 'px');
-                changeElemenStyle(dy * coefficient, 'backgroundPositionY', '', 'px');
-            } else if (touches.length === 2) {
-                let point1=-1, point2=-1;
-                for (let i=0; i < globalVars.evCache.length; i++) {
-                  if (globalVars.evCache[i].identifier == ev.touches[0].identifier) point1 = i;
-                  if (globalVars.evCache[i].identifier == ev.touches[1].identifier) point2 = i;
-                }
-                if (point1 >=0 && point2 >= 0) {
-                
-                    // Calculate the difference between the start and move coordinates
-                    const diff1X = Math.abs(globalVars.evCache[point1].clientX - ev.touches[0].clientX);
-                    const diff2X = Math.abs(globalVars.evCache[point2].clientX - ev.touches[1].clientX);
-
-                    //const diff1Y = Math.abs(globalVars.evCache[point1].clientY - ev.touches[0].clientY);
-
-                    const prevDiff = Math.abs(globalVars.evCache[point1].clientX - globalVars.evCache[point2].clientX );
-                    const curDiff = Math.abs(ev.touches[0].clientX - ev.touches[1].clientX );;
-
-                    // This threshold is device dependent as well as application specific
-                    const PINCH_THRESHHOLD_X = ev.target.clientWidth / 55;
-                    const pinchX = diff1X >= PINCH_THRESHHOLD_X && diff2X >= PINCH_THRESHHOLD_X;
-
-                    //const rotate = 0;
-
-                    // TODO: маштабировать по диагонали, а не только по ширине
-                    if (pinchX) {
-                        const signDiff = curDiff > prevDiff ? 1 : -1;
-                        const coefficient = signDiff * (0.2);
-                        changeElemenStyle( coefficient * (diff1X), 'backgroundSize', '', '%');
-                    }
-
-                    // TODO:
-                    /* if(rotate) {
-
-                    } */
-                }
-
-            }
-            globalVars.evCache.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
-        } 
-    }
-};
-
-const touchendHandler = (ev) => {
-    ev.preventDefault();
-    let touches = ev.touches;
-
-    for (let i = 0; i < touches.length; i++) {
-        let idx = ongoingTouchIndexById(touches[i].identifier);
-    
-        if (idx >= 0) {
-            globalVars.evCache.splice(idx, 1);  // remove it; we're done
-        }
-    }
-};
-
 export default function () {
     const cam = document.querySelector('.addition__cam__img');
+    const camContainer = document.querySelector('.addition__cam');
     globalVars.el = cam;
+    // При ресайзе пользовательского окна надо будет обновлять эти параметры
+    globalVars.elLimit.MaxWidth = safeParseInt( getComputedStyle(globalVars.el).width );
+    globalVars.elLimit.MaxHeight = safeParseInt( getComputedStyle(globalVars.el).height );
+    globalVars.elLimit.MinWidth = safeParseInt( getComputedStyle(globalVars.el).width );
+    globalVars.elLimit.MinHeight = safeParseInt( getComputedStyle(globalVars.el).height );
+    globalVars.elLimit.offsetX = safeParseInt( getComputedStyle(camContainer).width );
+    globalVars.elLimit.offsetY = safeParseInt( getComputedStyle(camContainer).height );
+    globalVars.coefficient = safeParseInt( getComputedStyle(globalVars.el).height ) * 0.01;
 
-    let iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    // PEP не работат по iOS
-    if (iOS) {
-        cam.ontouchstart = touchstartHandler;
-        cam.ontouchmove = touchmoveHandler;
-        cam.ontouchend = touchendHandler;
-        cam.ontouchend = touchendHandler;
-    } else {
-        cam.onpointerdown = pointerdownHandler;
-        cam.onpointermove = pointermoveHandler;
-        cam.onpointerup = pointerupHandler;
-        cam.onpointercancel = pointerupHandler;
-        cam.onpointerout = pointerupHandler;
-        cam.onpointerleave = pointerupHandler;
-    }
-
+    cam.addEventListener('pointerdown', pointerdownHandler);
+    cam.addEventListener('pointermove', pointermoveHandler);
+    cam.addEventListener('pointerup', pointerupHandler);
+    cam.addEventListener('pointercancel', pointerupHandler);
+    cam.addEventListener('pointerout', pointerupHandler);
+    cam.addEventListener('pointerleave', pointerupHandler);
 }
 
