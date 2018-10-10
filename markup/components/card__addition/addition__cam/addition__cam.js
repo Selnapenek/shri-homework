@@ -66,6 +66,7 @@ const safeParseInt = (val) => {
 
 // Округление до 2 знака
 const roundFloat = (number) => {
+    // return parseFloat(number.toFixed(2));
     return Math.round(number * 100) / 100;
 };
 
@@ -118,14 +119,14 @@ const getTransformMatrix = (el) => {
 const changeElementTransform = (el, value, limitationMinMax) => {
     const matrix = getTransformMatrix(el);
     const newValue = matrix.map( (item, index) => {
-        if (isNaN(limitationMinMax[0][index]) && isNaN(limitationMinMax[1][index])) {
-            return roundFloat( parseFloat(item) + value[index]);
-        } else if (parseFloat(item) + value[index] < limitationMinMax[0][index]) {
-            return roundFloat(limitationMinMax[0][index]);
-        } else if ( parseFloat(item) + value[index] > limitationMinMax[1][index]) {
-            return roundFloat(limitationMinMax[1][index]);
+        if ( isNaN( limitationMinMax[0][index] ) && isNaN( limitationMinMax[1][index] ) ) {
+            return roundFloat( parseFloat( item ) + value[index] );
+        } else if ( parseFloat( item ) + value[index] < limitationMinMax[0][index] ) {
+            return roundFloat( limitationMinMax[0][index] );
+        } else if ( parseFloat( item ) + value[index] > limitationMinMax[1][index] ) {
+            return roundFloat( limitationMinMax[1][index] );
         } else {
-            return roundFloat(parseFloat(item) + value[index]);
+            return roundFloat( parseFloat(item) + value[index] );
         }
     }).join(', ');
     el.style.transform = 'matrix(' + newValue + ')';
@@ -268,6 +269,7 @@ const pointerupHandler = (ev) => {
 export default function () {
     const cam = document.querySelector('.addition__cam__img');
     const camContainer = document.querySelector('.addition__cam');
+    const zommValue = document.querySelector('.addition__cam__zoom .addition__optional__value');
     globalVars.el = cam;
     // При ресайзе пользовательского окна надо будет обновлять эти параметры
     globalVars.elLimit.MaxWidth = safeParseInt( getComputedStyle(globalVars.el).width );
@@ -278,11 +280,25 @@ export default function () {
     globalVars.elLimit.offsetY = safeParseInt( getComputedStyle(camContainer).height );
     globalVars.coefficient = safeParseInt( getComputedStyle(globalVars.el).height ) * 0.01;
 
+    // Отслеживание жестов на камере
     cam.addEventListener('pointerdown', pointerdownHandler);
     cam.addEventListener('pointermove', pointermoveHandler);
     cam.addEventListener('pointerup', pointerupHandler);
     cam.addEventListener('pointercancel', pointerupHandler);
     cam.addEventListener('pointerout', pointerupHandler);
     cam.addEventListener('pointerleave', pointerupHandler);
+
+    // Отслеживаие изменения стилей css
+    const mutationObserver = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                const str = ( getTransformMatrix(globalVars.el)[0] * 100 ).toFixed(0);
+                zommValue.textContent = str + ' %';
+            }
+        });
+    });
+
+    const mutationConfig = { attributes: true };
+    mutationObserver.observe(cam, mutationConfig);
 }
 
