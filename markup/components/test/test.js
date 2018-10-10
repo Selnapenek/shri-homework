@@ -65,3 +65,6 @@ class Report extends React.Component {
     clear.onclick=clearLog;
 
      */
+
+
+     

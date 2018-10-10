@@ -30,6 +30,7 @@ const globalVars = {
     currentState: null, // Координаты x,y нажатия
     evCache: [], // Массив для определения мультитач событий
     prevDiff: -1, // Расстояние между двумя пальцами
+    prevAngle: -1, // Угол
     el: null, // Элеменкт с которым будут происходить изменения
     elLimit: { // Ограничения css свойств элемента
         MaxWidth: 0,
@@ -63,6 +64,10 @@ const getDiffXY = (x, y) => {
 const safeParseInt = (val) => {
     return parseInt(isNaN(val) ? val.replace(/[^-\d]\.+/g, '') : val, 10);
 };
+// Для того что бы достать значение яркости из css фильтра
+const safeParseFloat = (val) => {
+    return parseFloat(isNaN(val) ? val.replace(/[^\d\.]+/g, '') : val);
+};
 
 // Округление до 2 знака
 const roundFloat = (number) => {
@@ -83,15 +88,14 @@ const changeElemenStyle = (el, value, styleKey, strBefore, strAfter, ...limitati
         return;
     }
 
-    const prevStyle = safeParseInt(getComputedStyle(el)[styleKey]);
-    let newStyle = prevStyle + parseInt(value, 10);
+    const prevStyle = safeParseFloat(getComputedStyle(el)[styleKey]);
+    let newStyle = prevStyle + parseFloat(value);
     // Ограничение на стилевые параметры
-
     if (limitationMinMax.length === 2) {
         newStyle = newStyle < limitationMinMax[0] ? limitationMinMax[0] : newStyle;
         newStyle = newStyle > limitationMinMax[1] ? limitationMinMax[1] : newStyle;
     }
-    el.style[styleKey] = strBefore + newStyle + strAfter;
+    el.style[styleKey] = strBefore + roundFloat(newStyle) + strAfter;
 };
 
 /** Получим transform: matrix в виде массива
@@ -133,6 +137,15 @@ const changeElementTransform = (el, value, limitationMinMax) => {
 };
 
 // Pointer event
+
+const indexOfPointer = (pointerId) => {
+    return globalVars.evCache.find( (item, index) => {
+        if (item.pointerId === pointerId) {
+            return index;
+        }
+    });
+};
+
 const pointerdownHandler = (ev) => {
     // Инициализируем состояние нажатия
     setState(ev);
@@ -178,40 +191,35 @@ const pointermoveHandler = (ev) => {
             const curDiffX = Math.abs(globalVars.evCache[0].clientX - globalVars.evCache[1].clientX);
             const curDiffY = Math.abs(globalVars.evCache[0].clientY - globalVars.evCache[1].clientY);
             const curDiff = Math.sqrt(Math.pow(curDiffX, 2) + Math.pow(curDiffY, 2));
+            const curAngle = Math.atan2(curDiffY, curDiffX) * 180 / Math.PI;
 
-            let numerator = globalVars.evCache[0].clientX * globalVars.evCache[1].clientX;
-            numerator += globalVars.evCache[0].clientY * globalVars.evCache[1].clientY;
-            let denominator = Math.pow(globalVars.evCache[0].clientX, 2);
-            denominator += Math.pow(globalVars.evCache[0].clientY, 2);
-            denominator = Math.sqrt(denominator);
-            denominator *= Math.sqrt(Math.pow(globalVars.evCache[1].clientX, 2) + Math.pow(globalVars.evCache[1].clientY, 2));
-            const angle = Math.acos( (numerator / denominator) ) * 180 / Math.PI;
             // Если пальцы уже двигались
-            if (globalVars.prevDiff > 0) {
-                const signDiff = curDiff > globalVars.prevDiff ? 1 : -1;
-                /* const signAng = () => {
-                    // 0 - 90, 90 - 180, 180 - 270, 270 - 360 deg
-                    const leftTop = globalVars.currentState.startX > globalVars.evCache[1].clientX &&
-                                    globalVars.currentState.startY < globalVars.evCache[1].clientY;
-                    const rightTop = globalVars.currentState.startX > globalVars.evCache[1].clientX &&
-                                     globalVars.currentState.startY > globalVars.evCache[1].clientY;
-                    const rightBotoom = globalVars.currentState.startX < globalVars.evCache[1].clientX &&
-                                        globalVars.currentState.startY < globalVars.evCache[1].clientY;
-                    const leftBottom = globalVars.currentState.startX < globalVars.evCache[1].clientX &&
-                                       globalVars.currentState.startY > globalVars.evCache[1].clientY;
-
-                    if (leftTop || rightTop || rightBotoom || leftBottom) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }; */
-
-                const PINCH_THRESHHOLD = Math.sqrt(Math.pow(ev.target.clientWidth, 2) + Math.pow(ev.target.clientHeight, 2)) / 15;
+            if (globalVars.prevDiff > 0 && globalVars.prevAngle > 0) {
+                const angle = Math.abs( globalVars.prevDiff - curDiff ) < 15;
+                const PINCH_THRESHHOLD = Math.sqrt(Math.pow(ev.target.clientWidth, 2) + Math.pow(ev.target.clientHeight, 2)) / 20;
                 const pinch = curDiff / 2 >= PINCH_THRESHHOLD;
 
-                if (pinch) {
+                if (angle) {
+                    const {dx, dy} = getDiffXY(ev.clientX, ev.clientY);
+                    const da = curAngle - globalVars.prevAngle;
+                    let singAngl = 1;
+                    const firstQuarter = dx > 0 && dy > 0 && da < 0;
+                    const secondQuarter = dx < 0 && dy > 0 && da > 0;
+                    const thirdQuarter = dx < 0 && dy < 0 && da < 0;
+                    const fourthQuarter = dx > 0 && dy < 0 && da > 0;
+                    if ( firstQuarter || secondQuarter || thirdQuarter || fourthQuarter) {
+                        singAngl = 1;
+                    } else {
+                        singAngl = -1;
+                    }
+                
+                    const coefficient = 0.01 * Math.abs(curAngle - globalVars.prevAngle) * singAngl;
+                    changeElemenStyle(globalVars.el, coefficient, 'filter', 'brightness(', ')', 0.01, 2);
+
+                } else if (pinch) {
                     // Зум
+                    const signDiff = curDiff > globalVars.prevDiff ? 1 : -1;
+
                     const martix = [0.1 * signDiff, 0, 0, 0.1 * signDiff, 0, 0];
                     const limit = [
                         [0.6, NaN, NaN, 0.6, NaN, NaN],
@@ -235,6 +243,7 @@ const pointermoveHandler = (ev) => {
             }
             // Cache the distance for the next move event
             globalVars.prevDiff = curDiff;
+            globalVars.prevAngle = curAngle;
             setState(ev);
         }
     }
@@ -261,6 +270,8 @@ const pointerupHandler = (ev) => {
     // If the number of pointers down is less than two then reset diff tracker
     if (globalVars.evCache.length < 2) {
         globalVars.prevDiff = -1;
+        globalVars.prevAngle = -1;
+
     }
     removeEvent(ev);
     stopMove();
@@ -270,6 +281,8 @@ export default function () {
     const cam = document.querySelector('.addition__cam__img');
     const camContainer = document.querySelector('.addition__cam');
     const zommValue = document.querySelector('.addition__cam__zoom .addition__optional__value');
+    const brightValue = document.querySelector('.addition__cam__brightness .addition__optional__value');
+
     globalVars.el = cam;
     // При ресайзе пользовательского окна надо будет обновлять эти параметры
     globalVars.elLimit.MaxWidth = safeParseInt( getComputedStyle(globalVars.el).width );
@@ -292,8 +305,11 @@ export default function () {
     const mutationObserver = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                const str = ( getTransformMatrix(globalVars.el)[0] * 100 ).toFixed(0);
+                let str = ( getTransformMatrix(globalVars.el)[0] * 100 ).toFixed(0);
                 zommValue.textContent = str + ' %';
+
+                str = safeParseFloat( getComputedStyle(globalVars.el).filter );
+                brightValue.textContent = (str * 100).toFixed(0) + ' %';
             }
         });
     });
