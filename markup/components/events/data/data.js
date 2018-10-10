@@ -1,4 +1,4 @@
-let dataMain = {main: {
+let dataEvents = {events: {
     "events": [
         {
             "type": "info",

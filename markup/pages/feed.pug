@@ -2,9 +2,10 @@ doctype html
 html(class="no-js", lang="ru")
     include ../components/head/head.pug
     include ../components/header/header.pug
-    //include ../components/main/main.pug
+    include ../components/events/events.pug
+    include ../components/main/main.pug
     include ../components/footer/footer.pug
-
+    
     head
         +head(head.defaults)
         script(src='https://code.jquery.com/pep/0.4.3/pep.js')
@@ -13,7 +14,7 @@ html(class="no-js", lang="ru")
 
         +header()
 
-        //+main(main.events)
+        +main(events.events)
 
         +footer()
 

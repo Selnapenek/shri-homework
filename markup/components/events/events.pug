@@ -1,3 +1,6 @@
+include ../card/card.pug
+
+// data - array of events (cards)
 mixin main(data)
     main.events
         div.events__title
@@ -10,3 +13,6 @@ mixin main(data)
                 +card(val)
             else 
                 div There are no values
+
+
+        
