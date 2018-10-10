@@ -21,10 +21,12 @@
     }
 
     &:hover .card__btns  {
+        visibility: visible;
         opacity: 1;
     }
 
     .card__btns {
+        visibility: hidden;
         opacity: 0;
         transition: opacity 0.5s ease;
         // Mobile
