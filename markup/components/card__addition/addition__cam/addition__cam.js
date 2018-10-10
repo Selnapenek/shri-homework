@@ -1,30 +1,3 @@
-// Log events flag
-let logEvents = true;
-
-// Logging/debugging functions
-function enableLog() {
-    logEvents = logEvents ? false : true;
-}
-
-function log(prefix) {
-    if (!logEvents) {
-        return;
-    }
-    let o = document.getElementsByTagName('output')[0];
-    let s = prefix;
-    o.innerHTML += '<div>' + s + '<div>';
-}
-
-function clearLog(event) {
-    let o = document.getElementsByTagName('output')[0];
-    o.innerHTML = '';
-}
-
-const start = document.querySelector('#log');
-start.onclick = enableLog;
-const clear = document.querySelector('#clearlog');
-clear.onclick = clearLog;
-
 // Глобальные переменны состояния - для определения жеста и коордиат
 const globalVars = {
     currentState: null, // Координаты x,y нажатия
@@ -137,15 +110,6 @@ const changeElementTransform = (el, value, limitationMinMax) => {
 };
 
 // Pointer event
-
-const indexOfPointer = (pointerId) => {
-    return globalVars.evCache.find( (item, index) => {
-        if (item.pointerId === pointerId) {
-            return index;
-        }
-    });
-};
-
 const pointerdownHandler = (ev) => {
     // Инициализируем состояние нажатия
     setState(ev);
