@@ -2,20 +2,25 @@ doctype html
 html(class="no-js", lang="ru")
     include ../components/head/head.pug
     include ../components/header/header.pug
-    //include ../components/main/main.pug
+    include ../components/events/events.pug
     include ../components/footer/footer.pug
 
     head
         +head(head.defaults)
-        script(src='https://code.jquery.com/pep/0.4.3/pep.js')
     body.page
         |%=symbols=%
 
-        +header()
+        section.page__wrapper
+            //- Include your components here
 
-        //+main(main.events)
+            +header(header.defaults)
 
-        +footer()
+            +events(events.events)
+
+            .page__buffer
+
+        .page__footer
+            +footer()
 
         script(src='%=static=%js/separate-js/svg4everybody.min.js')
         script svg4everybody();

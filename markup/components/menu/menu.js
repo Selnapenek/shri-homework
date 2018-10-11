@@ -6,19 +6,4 @@ export default function () {
     }
 
     document.querySelector('.menu__icon').addEventListener('click', classToggle );
-
-    // TODO: Отрисовка ленты с помощью шаблонизатора
-    /* let request = new XMLHttpRequest();
-    request.open('GET', 'events.json', false);
-    request.send(null);
-    let result = JSON.parse(request.responseText);
-    let eventsJSON = {
-    };
-    eventsJSON.main = result;
-    console.log(eventsJSON); */
 }
-
-
-
-
-

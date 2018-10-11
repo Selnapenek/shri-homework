@@ -3,7 +3,6 @@ html(class="no-js", lang="ru")
     include ../components/head/head.pug
     include ../components/header/header.pug
     include ../components/events/events.pug
-    include ../components/main/main.pug
     include ../components/footer/footer.pug
     
     head
@@ -12,9 +11,9 @@ html(class="no-js", lang="ru")
     body.page
         |%=symbols=%
 
-        +header()
+        +header(header.defaults)
 
-        +main(events.events)
+        +events(events.events)
 
         +footer()
 

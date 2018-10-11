@@ -67,4 +67,15 @@ class Report extends React.Component {
      */
 
 
+    // TODO: Отрисовка ленты с помощью шаблонизатора
+    /* let request = new XMLHttpRequest();
+    request.open('GET', 'events.json', false);
+    request.send(null);
+    let result = JSON.parse(request.responseText);
+    let eventsJSON = {
+    };
+    eventsJSON.main = result;
+    console.log(eventsJSON); */
+
+
      

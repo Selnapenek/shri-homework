@@ -1,15 +1,10 @@
 mixin menu(data)
     nav.menu
-        .menu__item.menu__item_active
-            a.menu__link.link(href="#") События
-        .menu__item
-            a.menu__link.link(href="#") Cводка
-        .menu__item
-            a.menu__link.link(href="#") Устройство
-        .menu__item
-            a.menu__link.link(href="#") Сценарии
-        .menu__item
-            a.menu__link.link(href="#") Видео наблюдение
+        - let menuItems = data;
 
+        each item in menuItems
+            .menu__item 
+                a.menu__link.link(href=item.url) #{item.title}
+        else 
+            div There are no values
     .menu__icon
-
