@@ -1,6 +1,7 @@
 // TODO: CORS ошибка, ВООБЩЕ НЕ ЗНАЮ КАК ОТ НЕЕ ИЗБАВИТЬСЯ
 
 const Hls = require('hls.js');
+const d3 = require('d3');
 
 let rAFId = 0; // Id requestAnimationFrame
 
@@ -67,9 +68,8 @@ export default function () {
     const videoFullscreen = cctvFullscreen.querySelector('.cctv__item');
     const videoFullscreenCanvas = videoFullscreen.querySelector('canvas');
     const videoFullscreenCtx = videoFullscreenCanvas.getContext('2d');
+    const sound = cctv.querySelector('.cctv__detail__soundlevel');
     const closeFullscreenBtn = cctv.querySelector('.cctv__detail__icon');
-
-
 
     const filterBritness = cctv.querySelector('.filter_britness');
     const filterContrast = cctv.querySelector('.filter_contrast');
@@ -118,10 +118,73 @@ export default function () {
                 // Установим размер canvas такойже как и исходный размер видео
                 videoFullscreenCanvas.width = currentVideoFullscreen.videoWidth;
                 videoFullscreenCanvas.height = currentVideoFullscreen.videoHeight;
-                videoFullscreenCtx.drawImage(video.container, 0, 0);
+                videoFullscreenCtx.drawImage(currentVideoFullscreen, 0, 0);
                 rAFId = requestAnimationFrame(loop);
             };
             loop();
+
+            // Работаем со звуком
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                const audioContext = new AudioContext();
+                // Источник аудио - открытое видео
+                const source = audioContext.createMediaElementSource(currentVideoFullscreen);
+        
+                // Создаем анализатор
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 32;
+                // Привязываем все друг к дружке
+                source.connect(analyser);
+                source.connect(audioContext.destination);
+                // Наш звук в виде массива частот
+                const frequencyData = new Uint8Array(analyser.frequencyBinCount);
+
+                const svgHeight = sound.clientHeight - 30;
+                const svgWidth = sound.clientWidth - 30;
+                const barPadding = '1';
+
+                const createSvg = (parent, height, width) => {
+                    return d3.select(parent).append('svg').attr('height', height).attr('width', width);
+                };
+
+                const svg = createSvg(sound, svgHeight, svgWidth);
+                // Continuously loop and update chart with frequency data.
+                const renderChart = () => {
+                    requestAnimationFrame(renderChart);
+
+                    // Copy frequency data to frequencyData array.
+                    analyser.getByteFrequencyData(frequencyData);
+
+                    // Update d3 chart with new data.
+                    svg.selectAll('rect')
+                        .data(frequencyData)
+                        .attr('y', function (d) {
+                            return svgHeight - d;
+                        })
+                        .attr('height', function (d) {
+                            return d;
+                        })
+                        .attr('fill', function (d) {
+                            return 'rgb(0, 0, ' + d + ')';
+                        });
+                };
+
+                // Create our initial D3 chart.
+                svg.selectAll('rect')
+                    .data(frequencyData)
+                    .enter()
+                    .append('rect')
+                    .attr('x', function (d, i) {
+                        return i * (svgWidth / frequencyData.length);
+                    })
+                    .attr('width', svgWidth / frequencyData.length - barPadding);
+
+                // Run the loop
+                renderChart();
+            } else {
+                console.log('Ваш браузер не поддерживает Web Audio API');
+            }
+
         });
     });
 
@@ -146,7 +209,6 @@ export default function () {
 
         newFilter[brightnesInex] = 'brightness(' + brightness + ')';
         newFilter = newFilter.join(' ');
-        console.log(newFilter);
         videoFullscreen.style.filter = newFilter;
     });
     // TODO: обеденить повторяющийся код...
@@ -163,8 +225,11 @@ export default function () {
 
         newFilter[contrastInex] = 'contrast(' + contrast + ')';
         newFilter = newFilter.join(' ');
-        console.log(newFilter);
         videoFullscreen.style.filter = newFilter;
+    });
+
+    sound.addEventListener('click', () => {
+
     });
 
 }

@@ -1,10 +1,15 @@
 .cctv {
     display: flex;
     flex-direction: column;
+    user-select: none;
 
 
     padding: 0 150px;
     margin: auto;
+
+    @media screen and (max-width: $break-point_lp) {
+        padding: 0;
+    }
 
     .cctv__container {
         display: flex;
@@ -36,13 +41,38 @@
         transform-origin: left top;
         transition: 0.6s ease;
 
+        margin: auto;
+        display: flex;
+        flex: 100%;
+
+        @media screen and (max-width: $break-point_lp) {
+            flex-direction: column;
+            padding: 20px;
+        }
+
         .cctv__item {
             width: 60%;
             filter: brightness(1) contrast(1);
-
+            flex: 1;
             canvas {
                 padding: 10px;
                 border-radius: 20px;
+            }
+        }
+
+        .cctv__detail__right{
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+
+            .cctv__detail__filters {
+                margin: 10px;
+            }
+
+            .cctv__detail__soundlevel {
+                width: 100%;
+                height: auto;
+                flex: 1;
             }
         }
     }
@@ -59,15 +89,11 @@
     }
 
     .cctv__detail{
-        display: flex;
         height: auto;
         min-height: 400px;
-        flex: 100%;
         opacity: 1;
 
         transform: scale(1);
-
-        margin: auto;
 
         .cctv__item {
             width: auto;

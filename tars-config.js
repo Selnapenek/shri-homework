@@ -20,7 +20,7 @@ module.exports = {
         "removeConsoleLog": true,
         "webpack": {
             "useHMR": false,
-            "providePlugin": {'Hls': 'hls.js'}
+            "providePlugin": { 'Hls': 'hls.js' , 'd3' : 'd3'} 
         },
         "jsPathsToConcatBeforeModulesJs": [],
         "lintJsCodeBeforeModules": false,

@@ -14,10 +14,11 @@ mixin cctv(data)
         .cctv__detail
             .cctv__item
                 canvas()
-            .cctv__detail__filters
-                label(for="filter_britness") Яркость
-                input(type="range" name="filter_britness" min='0' max='2' step='0.1').filter.filter_britness
-                label(for="filter_contrast") Контраст
-                input(type="range" min='0' max='2' step='0.1').filter.filter_contrast
-            .cctv__detail__soundlevel
+            .cctv__detail__right
+                .cctv__detail__filters
+                    label(for="filter_britness") Яркость
+                    input(type="range" name="filter_britness" min='0' max='2' step='0.1').filter.filter_britness
+                    label(for="filter_contrast") Контраст
+                    input(type="range" min='0' max='2' step='0.1').filter.filter_contrast
+                .cctv__detail__soundlevel
             .cctv__detail__icon.icon_cross
