@@ -38,7 +38,8 @@
 
         .cctv__item {
             width: 60%;
-            
+            filter: brightness(1) contrast(1);
+
             canvas {
                 padding: 10px;
                 border-radius: 20px;

@@ -5,7 +5,7 @@ const Hls = require('hls.js');
 let rAFId = 0; // Id requestAnimationFrame
 
 // Инциализаци HLS потока
-const initVideo = (video, url, ...objConf) => {
+const initVideo = (video, url) => {
     if (Hls.isSupported()) {
         const config = {
             capLevelToPlayerSize: true,
@@ -60,15 +60,19 @@ export default function () {
     const cctv = document.querySelector('.cctv');
     const cctvFullscreen = cctv.querySelector('.cctv__detail');
 
+    const videoContainers = cctv.querySelectorAll('.cctv__container .cctv__item video');
+
+    let currentVideoFullscreen = null;
+
     const videoFullscreen = cctvFullscreen.querySelector('.cctv__item');
     const videoFullscreenCanvas = videoFullscreen.querySelector('canvas');
     const videoFullscreenCtx = videoFullscreenCanvas.getContext('2d');
-
-    const videoContainers = cctv.querySelectorAll('.cctv__container .cctv__item video');
     const closeFullscreenBtn = cctv.querySelector('.cctv__detail__icon');
 
+
+
     const filterBritness = cctv.querySelector('.filter_britness');
-    const filtercontrast = cctv.querySelector('.filter_contrast');
+    const filterContrast = cctv.querySelector('.filter_contrast');
 
     // Массив обьектов в которых хранится ресурс видеопотока и контейнер видео
     const videoSrcAndContainer = [
@@ -98,26 +102,22 @@ export default function () {
         video.container.addEventListener('click', (ev) => {
             cctv.classList.toggle('cctv_full');
 
+            currentVideoFullscreen = ev.target;
+            currentVideoFullscreen.muted = false;
+
+            // Анимация появления fullscreen
             // const dx = ev.x - cctvFullscreen.getBoundingClientRect().x;
             const dy = ev.y - cctvFullscreen.getBoundingClientRect().y;
             cctvFullscreen.style.transformOrigin = ( ev.x + ev.target.clientWidth / 2 ) + 'px ' + dy + 'px';
 
             // Продолжим воспроизведение видео с того же момента времени в большом окне
-            /*
-            // Первоначальный вариант был таков :
-            const currentTime = video.container.currentTime;
-            const config = {
-                startPosition: currentTime
-            }
-            initVideo(videoFullscreen, video.src, config);
-            */
-
+            // TODO: move to readme
             // canvas + rAF - подоходит для этой задачи,
             // но если задачу маштабировать стоит присмотреть пушку по больше (WebGl)
             const loop = () => {
                 // Установим размер canvas такойже как и исходный размер видео
-                videoFullscreenCanvas.width = ev.target.videoWidth;
-                videoFullscreenCanvas.height = ev.target.videoHeight;
+                videoFullscreenCanvas.width = currentVideoFullscreen.videoWidth;
+                videoFullscreenCanvas.height = currentVideoFullscreen.videoHeight;
                 videoFullscreenCtx.drawImage(video.container, 0, 0);
                 rAFId = requestAnimationFrame(loop);
             };
@@ -125,15 +125,46 @@ export default function () {
         });
     });
 
-    // Закроем окно
+    // Закроем окно fullscreen
     closeFullscreenBtn.addEventListener('click', () => {
         cctv.classList.toggle('cctv_full');
+        currentVideoFullscreen.muted = true;
         cancelAnimationFrame(rAFId);
     });
+
+    // Изменение яркости и контрастности
+    filterBritness.addEventListener('change', () => {
+        const brightness = filterBritness.value;
+
+        const prevFilter = getComputedStyle(videoFullscreen).filter;
+        let newFilter = prevFilter.split(' ');
+
+        const brightnesInex = newFilter.findIndex( (elem) => {
+            const regx = /brightness/;
+            return regx.test(elem);
+        });
+
+        newFilter[brightnesInex] = 'brightness(' + brightness + ')';
+        newFilter = newFilter.join(' ');
+        console.log(newFilter);
+        videoFullscreen.style.filter = newFilter;
+    });
+    // TODO: обеденить повторяющийся код...
+    filterContrast.addEventListener('change', () => {
+        const contrast = filterContrast.value;
+
+        const prevFilter = getComputedStyle(videoFullscreen).filter;
+        let newFilter = prevFilter.split(' ');
+
+        const contrastInex = newFilter.findIndex( (elem) => {
+            const regx = /contrast/;
+            return regx.test(elem);
+        });
+
+        newFilter[contrastInex] = 'contrast(' + contrast + ')';
+        newFilter = newFilter.join(' ');
+        console.log(newFilter);
+        videoFullscreen.style.filter = newFilter;
+    });
+
 }
-
-const initFullscreenVideo = (video) => {
-    // const camera = new THREE.PerspectiveCamera( 40, video.innerWidth / video.innerHeight, 1, 10000 );
-
-};
-
