@@ -18,7 +18,7 @@ let dataHeader = {header: {
                 url: '#'
             },
             {
-                title: 'Видео наблюдение',
+                title: 'Видеонаблюдение',
                 url: '/cctv.html'
             }
         ]
