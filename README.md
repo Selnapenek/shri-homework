@@ -9,7 +9,12 @@
 <code>cd client</code><br>
 <code>npm install</code><br>
 <code>tars dev</code><br>
-Либо можете посмотреть https://selnapenek.github.io/shi-hm1-responsove-desing/<br>
+Либо можете посмотреть
+<ul>
+  <li>https://selnapenek.github.io/shi-hm1-responsove-desing/</li>
+  <li>https://selnapenek.github.io/shi-hm1-responsove-desing/cctv.html</li>
+</ul>
+
 
 <br>Серверная часть нахоидтся в папке server<br>
 Для запуска используйте команду<br> 
