@@ -6,11 +6,15 @@
 Клиенсткая часть находится в папке client<br>
 Исходники находятся в папке markup.<br>
 Для локального запуска используйте команду 
+<code>cd client</code><br>
+<code>npm install</code><br>
 <code>tars dev</code><br>
 Либо можете посмотреть https://selnapenek.github.io/shi-hm1-responsove-desing/<br>
 
 <br>Серверная часть нахоидтся в папке server<br>
 Для запуска используйте команду 
+<code>cd server</code><br>
+<code>npm install</code><br>
 <code>npm start/code><br>
   
   Вики страницы
