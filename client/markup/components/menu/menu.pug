@@ -1,0 +1,10 @@
+mixin menu(data)
+    nav.menu
+        - let menuItems = data;
+
+        each item in menuItems
+            .menu__item 
+                a.menu__link.link(href=item.url) #{item.title}
+        else 
+            div There are no values
+    .menu__icon
