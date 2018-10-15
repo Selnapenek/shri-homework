@@ -20,7 +20,7 @@
 Для запуска используйте команду<br> 
 <code>cd server</code><br>
 <code>npm install</code><br>
-<code>npm start/code><br>
+<code>npm start</code><br>
   
   Вики страницы
   <ul>
