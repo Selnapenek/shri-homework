@@ -1,10 +1,10 @@
 # Решение домашнего задания ШРИ2018
 
 Общее:<br>
-Для локального запуска вам потребуется установить <a href="https://github.com/tars/tars-cli">tars-cli</a>  
 
 Клиенсткая часть находится в папке client<br>
 Исходники находятся в папке markup.<br>
+Для локального запуска вам потребуется установить <a href="https://github.com/tars/tars-cli">tars-cli</a>  
 Для локального запуска используйте команду <br>
 <code>cd client</code><br>
 <code>npm install</code><br>
