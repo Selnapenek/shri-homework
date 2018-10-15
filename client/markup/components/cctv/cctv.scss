@@ -2,8 +2,6 @@
     display: flex;
     flex-direction: column;
     user-select: none;
-
-
     padding: 0 150px;
     margin: auto;
 
@@ -16,10 +14,9 @@
         flex-wrap: wrap;
         justify-content: center;
         height: auto;
-        //transition: all 0.6s ease;
         animation: 1s fadeIn;
     }
-    
+
     .cctv__item {
         width: 40%;
         height: 200px;
@@ -27,40 +24,49 @@
         border-radius: 20px;
         border: 1px solid black;
         background: #000000;
+
+        @media screen and (max-width: $break-point_lp) {
+            height: 150px;
+        }
+
         video {
             width: 100%;
             height: 100%;
         }
     }
 
-    .cctv__detail{
+    .cctv__detail {
         width: 100%;
         height: 0;
         opacity: 0;
         transform: scale(0);
         transform-origin: left top;
         transition: 0.6s ease;
-
         margin: auto;
         display: flex;
         flex: 100%;
 
         @media screen and (max-width: $break-point_lp) {
             flex-direction: column;
-            padding: 20px;
+            padding: 0;
         }
 
         .cctv__item {
             width: 60%;
             filter: brightness(1) contrast(1);
             flex: 1;
+            display: flex;
+
             canvas {
+                width: 90%;
+                height: 90%;
+                margin: auto;
                 padding: 10px;
                 border-radius: 20px;
             }
         }
 
-        .cctv__detail__right{
+        .cctv__detail__right {
             display: flex;
             flex-direction: column;
             margin: 10px;
@@ -73,6 +79,10 @@
                 width: 100%;
                 height: auto;
                 flex: 1;
+                svg {
+                    width: 100%;
+                    height: 90%;
+                }
             }
         }
     }
@@ -80,15 +90,14 @@
 
 .cctv_full {
 
-    .cctv__container{
+    .cctv__container {
         opacity: 0;
         height: 0;
         animation: 1s fadeOut;
-        .cctv__item {
-        }
+
     }
 
-    .cctv__detail{
+    .cctv__detail {
         height: auto;
         min-height: 400px;
         opacity: 1;
@@ -96,29 +105,34 @@
         transform: scale(1);
 
         .cctv__item {
-            width: auto;
+            width: 60%;
             height: auto;
             margin: 10px;
             border-radius: 20px;
             border: 1px solid black;
             transition: 1.3s ease;
 
+            @media screen and (max-width: $break-point_lp) {
+                height: 250px;
+                width: 90%;
+                margin: auto;
+            }
         }
 
         .cctv__detail__icon {
             position: absolute;
             cursor: pointer;
         }
-
     }
 }
 
 @keyframes fadeIn {
-    from{
+    from {
         opacity: 0;
         height: 0;
     }
-    to{
+
+    to {
         opacity: 1;
         height: 100px;
     }
@@ -126,11 +140,12 @@
 
 
 @keyframes fadeOut {
-    from{
+    from {
         opacity: 1;
         height: 0;
     }
-    to{
+
+    to {
         opacity: 0;
         height: 0;
     }
