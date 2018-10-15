@@ -3,11 +3,12 @@
 Общее:<br>
 Для локального запуска вам потребуется установить <a href="https://github.com/tars/tars-cli">tars-cli</a>  
 
-Либо можете посмотреть https://selnapenek.github.io/shi-hm1-responsove-desing/<br>
 Клиенсткая часть находится в папке client<br>
 Исходники находятся в папке markup.<br>
-Для запуска используйте команду 
+Для локального запуска используйте команду 
 <code>tars dev</code><br>
+Либо можете посмотреть https://selnapenek.github.io/shi-hm1-responsove-desing/<br>
+
 <br>Серверная часть нахоидтся в папке server<br>
 Для запуска используйте команду 
 <code>npm start/code><br>
