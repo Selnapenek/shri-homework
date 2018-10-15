@@ -17,13 +17,17 @@
   <ul>
   <li>hw1,2/resposive desing & User input - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw1,2">тут</a></li>
   <li>hw3/multimedia  - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw3-multimedia">ВОТ ТУТ</a></li>
-  <li>hm4 - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw4-nodejs"></a></li>
+  <li>hm4 - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw4-nodejs">И тут</a></li>
   </ul>
 
 
+<br>
 <br>P.S.
-<br>Надеюсь успею все доделать до того как вы дойдете до проверки моей работы :)<br>
-На macOS tars установился с 6 версии node(если точнее то с 6.14.4; npm v3.10.10), на windows с 8.
+
+
+<br>Надеюсь успею все доделать до того как вы дойдете до проверки моей работы :)
+
+<br>На macOS tars установился с 6 версии node(если точнее то с 6.14.4; npm v3.10.10), на windows с 8.
 
 
 
