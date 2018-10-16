@@ -111,7 +111,8 @@
             border-radius: 20px;
             border: 1px solid black;
             transition: 1.3s ease;
-
+            flex: 1 1 100%;
+            
             @media screen and (max-width: $break-point_lp) {
                 height: 250px;
                 width: 90%;
