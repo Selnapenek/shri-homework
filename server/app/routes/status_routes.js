@@ -14,5 +14,9 @@ router.get('/', (req, res) => {
     res.send(getServerTime());
 });
 
+router.post('/', (req, res) => {
+    res.send(getServerTime());
+});
+
 module.exports = router;
 
