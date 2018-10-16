@@ -66,6 +66,7 @@ export default function () {
     const videoContainers = cctv.querySelectorAll('.cctv__container .cctv__item video');
 
     let currentVideoFullscreen = null;
+    let prevVideoFullscreen = null;
 
     const videoFullscreen = cctvFullscreen.querySelector('.cctv__item');
     const videoFullscreenCanvas = videoFullscreen.querySelector('canvas');
@@ -137,10 +138,12 @@ export default function () {
             };
             continueFullscreenVideo();
 
-            source = audioContext.createMediaElementSource(currentVideoFullscreen);
-            // Привязываем все друг к дружке
-            source.connect(analyser);
-            source.connect(audioContext.destination);
+            if (prevVideoFullscreen !== currentVideoFullscreen) {
+                source = audioContext.createMediaElementSource(currentVideoFullscreen);
+                // Привязываем все друг к дружке
+                source.connect(analyser);
+                source.connect(audioContext.destination);
+            }
 
             const createSvg = (parent, height, width) => {
                 return d3.select(parent).select('svg').attr('height', height).attr('width', width);
@@ -193,7 +196,9 @@ export default function () {
         cctv.classList.toggle('cctv_full');
         currentVideoFullscreen.muted = true;
         cancelAnimationFrame(rAFVideoId);
-        cancelAnimationFrame(rAFAudioId);   
+        cancelAnimationFrame(rAFAudioId);
+        prevVideoFullscreen = currentVideoFullscreen;   
+        currentVideoFullscreen = null;
         // source.disconnect(analyser);
         // source.disconnect(audioContext.destination);
         filterBritness.value = 1;
