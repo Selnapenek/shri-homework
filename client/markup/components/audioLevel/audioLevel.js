@@ -12,10 +12,6 @@ export class AudioLevel {
         this.analyser.fftSize = 32;
         // Наш звук в виде массива частот
         this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
-
-        this.svgHeight = this.audioLevelContainer.clientHeight - 30;
-        this.svgWidth = this.audioLevelContainer.clientWidth - 30;
-        this.barPadding = '1';
         this.svg = null;
         this.startRender = true;
         this.rAF = -1;
@@ -40,9 +36,8 @@ export class AudioLevel {
     createSvg() {
         this.svg = d3.select(this.audioLevelContainer)
             .select('svg')
-            .attr('viewBox', '0 0 300 300')
-            .attr('height', this.svgHeight)
-            .attr('width', this.svgWidth);
+            .attr('width', '100%')
+            .attr('height', '100%');
     }
 
     renderChart() {
@@ -61,8 +56,6 @@ export class AudioLevel {
 
     initChart() {
         // Create our initial D3 chart.
-        const width = this.svgWidth;
-        const height = this.svgHeight;
         const data = this.frequencyData;
         const barPadding = this.barPadding;
         this.svg.selectAll('rect')
@@ -70,10 +63,10 @@ export class AudioLevel {
             .enter()
             .append('rect')
             .attr('x', function (d, i) {
-                return i * (width / data.length);
+                return (i * (100 / data.length)) + '%';
             })
-            .attr('width', width / data.length - barPadding)
-            .attr('height', height);
+            .attr('width', (100 / data.length - 1) + '%' )
+            .attr('height', '100%');
 
         // Run the loop
         this.startRender = true;
