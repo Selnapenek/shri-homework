@@ -1,24 +1,13 @@
+import {VideoFullscreen} from 'components/videoFullscreen/videoFullscreen.js';
 import {VideoFilter} from 'components/videoFilter/videoFilter.js';
 import {AudioLevel} from 'components/audioLevel/audioLevel.js';
 
 const Hls = require('hls.js');
 
-let rAFVideoId = -1; // Id requestAnimationFrame
-
 // Инциализаци HLS потока
 const initVideo = (video, url) => {
     if (Hls.isSupported()) {
-        const config = {
-            // debug: true,
-            // Почему-то сильно тупил сервер раздачи - теперь танцую с бубном
-            // Простой ребут не помогал, эти конфиги хоть как-то сгладили проблему
-            // maxBufferLength: 120,
-            // maxBufferSize: 240 * 1000 * 1000,
-            // maxBufferHole: 4,
-            // maxFragLookUpTolerance: 0.6,
-            // maxMaxBufferLength: 2400
-        };
-        const hls = new Hls(config);
+        const hls = new Hls();
         hls.attachMedia(video);
         hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             hls.loadSource(url);
@@ -62,26 +51,25 @@ export default function () {
     const cctv = document.querySelector('.cctv');
     const cctvFullscreen = cctv.querySelector('.cctv__detail');
 
-    const videoContainers = cctv.querySelectorAll('.cctv__container .cctv__item video');
-
     let currentVideoFullscreen = null;
 
-    const videoFullscreen = cctvFullscreen.querySelector('.cctv__item');
-    const videoFullscreenCanvas = videoFullscreen.querySelector('canvas');
-    const videoFullscreenCtx = videoFullscreenCanvas.getContext('2d');
+    const videoFullscreenContainer = cctvFullscreen.querySelector('.cctv__item');
+    const videoFullscreen = new VideoFullscreen(videoFullscreenContainer);
+    
+    // Визуализация громости видео
     const audioLevelContainer = cctv.querySelector('.cctv__detail__soundlevel');
-    const closeFullscreenBtn = cctv.querySelector('.cctv__detail__icon');
-
-    const filterInputBritness = cctv.querySelector('.filter_britness');
-    const filterInputContrast = cctv.querySelector('.filter_contrast');
-
-    const videoFilterBritness = new VideoFilter(videoFullscreen, filterInputBritness, 'brightness');
-    const videoFilterContrast = new VideoFilter(videoFullscreen, filterInputContrast, 'contrast');
+    const audioLevel = new AudioLevel(audioLevelContainer);
 
     // Изменение яркости и контрастности
+    const filterInputBritness = cctv.querySelector('.filter_britness');
+    const videoFilterBritness = new VideoFilter(videoFullscreenContainer, filterInputBritness, 'brightness');
     videoFilterBritness.onChange();
+
+    const filterInputContrast = cctv.querySelector('.filter_contrast');
+    const videoFilterContrast = new VideoFilter(videoFullscreenContainer, filterInputContrast, 'contrast');
     videoFilterContrast.onChange();
 
+    const videoContainers = cctv.querySelectorAll('.cctv__container .cctv__item video');
     // Массив обьектов в которых хранится ресурс видеопотока и контейнер видео
     const videoSrcAndContainer = [
         {
@@ -102,8 +90,6 @@ export default function () {
         }
     ];
 
-    const audioLevel = new AudioLevel(audioLevelContainer);
-
     videoSrcAndContainer.forEach( (video) => {
         // Инициализация видео
         initVideo(video.container, video.src);
@@ -116,36 +102,29 @@ export default function () {
             currentVideoFullscreen.muted = false;
 
             // Анимация появления fullscreen
-            // const dx = ev.x - cctvFullscreen.getBoundingClientRect().x;
             const dy = ev.y - cctvFullscreen.getBoundingClientRect().y;
             cctvFullscreen.style.transformOrigin = ( ev.x + ev.target.clientWidth / 2 ) + 'px ' + dy + 'px';
 
             // Продолжим воспроизведение видео с того же момента времени в большом окне
-            const continueFullscreenVideo = () => {
-                // Установим размер canvas такойже как и исходный размер видео
-                videoFullscreenCanvas.width = currentVideoFullscreen.videoWidth;
-                videoFullscreenCanvas.height = currentVideoFullscreen.videoHeight;
-                videoFullscreenCtx.drawImage(currentVideoFullscreen, 0, 0);
-                rAFVideoId = requestAnimationFrame(continueFullscreenVideo);
-            };
-            continueFullscreenVideo();
-            
+            videoFullscreen.connecVideoSrc(currentVideoFullscreen);
+            videoFullscreen.continueFullscreenVideo();
+        
             audioLevel.connectAudioSrc(currentVideoFullscreen);
             audioLevel.createSvg();
             audioLevel.initChart();
-
         });
     });
+
+    const closeFullscreenBtn = cctv.querySelector('.cctv__detail__icon');
 
     // Закроем окно fullscreen
     closeFullscreenBtn.addEventListener('click', () => {
         cctv.classList.toggle('cctv_full');
         currentVideoFullscreen.muted = true;
-        cancelAnimationFrame(rAFVideoId);
         audioLevel.stopRenderChart();
+        videoFullscreen.stopContinuePlay();
         videoFilterBritness.toDefaultValue();
         videoFilterContrast.toDefaultValue();
         currentVideoFullscreen = null;
     });
-
 }

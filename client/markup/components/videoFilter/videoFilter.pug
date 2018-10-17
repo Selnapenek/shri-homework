@@ -1,0 +1,4 @@
+mixin videoFilter(label, name)
+    .videoFilter
+        label(for=name)= label
+        input(type="range" name=name class=name min='0' max='2' step='0.1').filter

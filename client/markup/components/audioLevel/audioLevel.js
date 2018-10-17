@@ -1,3 +1,4 @@
+// TODO: заменить d3 на что-нибудь по легче/ почему-то визуалиция аудио на d3 дофига потребляет
 const d3 = require('d3');
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -57,7 +58,6 @@ export class AudioLevel {
     initChart() {
         // Create our initial D3 chart.
         const data = this.frequencyData;
-        const barPadding = this.barPadding;
         this.svg.selectAll('rect')
             .data(data)
             .enter()
