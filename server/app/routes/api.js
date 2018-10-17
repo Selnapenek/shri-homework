@@ -19,10 +19,29 @@ const getValidTypeEvents = (req, res, next) => {
         }
     }
     next();
-}
+};
+
+// Пагинация событий
+const eventsPagination = (page = 0, perPage = 5) => {
+    // По хорошему сюда бы проверку на дурака
+    const result = JSON.parse(JSON.stringify(db.dataEvents));
+    result.events = result.events.splice(page * perPage, perPage);
+    return result;
+};
 
 router.use('/events', getValidTypeEvents);
 
+router.use('/events', (req, res, next) => {
+    if (req.query.page) {
+        if (req.query.perPage) {
+            return res.json(eventsPagination(req.query.page, req.query.perPage));
+        }
+        return res.json(eventsPagination(req.query.page));
+    }
+    next();
+});
+
+// Отдаем все события
 router.get('/events', (req, res) => {
     res.json(db.dataEvents);
 });

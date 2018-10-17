@@ -1,7 +1,7 @@
 'use strict';
 
-const apiRoutes = require('./api_routes');
-const statusRoutes = require('./status_routes');
+const apiRoutes = require('./api');
+const statusRoutes = require('./status');
 
 module.exports = {
     apiRoutes: apiRoutes,
