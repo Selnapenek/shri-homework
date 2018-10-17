@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 // Проверка на инвалидный get параметр type
-router.use((req, res, next) => {
+const getValidTypeEvents = (req, res, next) => {
     if (req.query.type) {
         if (db.validEventTypes.indexOf(req.query.type) === -1) {
             return next(createError(400, 'Incorrect type'));
@@ -19,9 +19,15 @@ router.use((req, res, next) => {
         }
     }
     next();
-});
+}
+
+router.use('/events', getValidTypeEvents);
 
 router.get('/events', (req, res) => {
+    res.json(db.dataEvents);
+});
+
+router.post('/events', (req, res) => {
     res.json(db.dataEvents);
 });
 
