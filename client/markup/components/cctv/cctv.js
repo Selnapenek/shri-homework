@@ -1,4 +1,4 @@
-// TODO: CORS ошибка, ВООБЩЕ НЕ ЗНАЮ КАК ОТ НЕЕ ИЗБАВИТЬСЯ
+import {VideoFilter} from 'components/videoFilter/videoFilter.js';
 
 const Hls = require('hls.js');
 const d3 = require('d3');
@@ -66,7 +66,6 @@ export default function () {
     const videoContainers = cctv.querySelectorAll('.cctv__container .cctv__item video');
 
     let currentVideoFullscreen = null;
-    let prevVideoFullscreen = null;
 
     const videoFullscreen = cctvFullscreen.querySelector('.cctv__item');
     const videoFullscreenCanvas = videoFullscreen.querySelector('canvas');
@@ -74,8 +73,15 @@ export default function () {
     const sound = cctv.querySelector('.cctv__detail__soundlevel');
     const closeFullscreenBtn = cctv.querySelector('.cctv__detail__icon');
 
-    const filterBritness = cctv.querySelector('.filter_britness');
-    const filterContrast = cctv.querySelector('.filter_contrast');
+    const filterInputBritness = cctv.querySelector('.filter_britness');
+    const filterInputContrast = cctv.querySelector('.filter_contrast');
+
+    const videoFilterBritness = new VideoFilter(videoFullscreen, filterInputBritness, 'brightness');
+    const videoFilterContrast = new VideoFilter(videoFullscreen, filterInputContrast, 'contrast');
+
+    // Изменение яркости и контрастности
+    videoFilterBritness.onChange();
+    videoFilterContrast.onChange();
 
     // Массив обьектов в которых хранится ресурс видеопотока и контейнер видео
     const videoSrcAndContainer = [
@@ -96,7 +102,6 @@ export default function () {
             container: videoContainers[3]
         }
     ];
-
 
     let audioContext, source, analyser, frequencyData;
     // Работаем со звуком
@@ -138,12 +143,11 @@ export default function () {
             };
             continueFullscreenVideo();
 
-            if (prevVideoFullscreen !== currentVideoFullscreen) {
-                source = audioContext.createMediaElementSource(currentVideoFullscreen);
-                // Привязываем все друг к дружке
-                source.connect(analyser);
-                source.connect(audioContext.destination);
-            }
+            source = audioContext.createMediaElementSource(currentVideoFullscreen);
+            // Привязываем все друг к дружке
+            source.connect(analyser);
+            source.connect(audioContext.destination);
+            
 
             const createSvg = (parent, height, width) => {
                 return d3.select(parent).select('svg').attr('height', height).attr('width', width);
@@ -197,45 +201,12 @@ export default function () {
         currentVideoFullscreen.muted = true;
         cancelAnimationFrame(rAFVideoId);
         cancelAnimationFrame(rAFAudioId);
-        prevVideoFullscreen = currentVideoFullscreen;   
         currentVideoFullscreen = null;
         // source.disconnect(analyser);
         // source.disconnect(audioContext.destination);
-        filterBritness.value = 1;
-        filterContrast.value = 1;
+        videoFilterBritness.toDefaultValue();
+        videoFilterContrast.toDefaultValue();
         videoFullscreen.style.filter = 'brightness(1) contrast(1)';
     });
 
-    // Изменение яркости и контрастности
-    filterBritness.addEventListener('change', () => {
-        const brightness = filterBritness.value;
-
-        const prevFilter = getComputedStyle(videoFullscreen).filter;
-        let newFilter = prevFilter.split(' ');
-
-        const brightnesInex = newFilter.findIndex( (elem) => {
-            const regx = /brightness/;
-            return regx.test(elem);
-        });
-
-        newFilter[brightnesInex] = 'brightness(' + brightness + ')';
-        newFilter = newFilter.join(' ');
-        videoFullscreen.style.filter = newFilter;
-    });
-    // TODO: обеденить повторяющийся код...
-    filterContrast.addEventListener('change', () => {
-        const contrast = filterContrast.value;
-
-        const prevFilter = getComputedStyle(videoFullscreen).filter;
-        let newFilter = prevFilter.split(' ');
-
-        const contrastInex = newFilter.findIndex( (elem) => {
-            const regx = /contrast/;
-            return regx.test(elem);
-        });
-
-        newFilter[contrastInex] = 'contrast(' + contrast + ')';
-        newFilter = newFilter.join(' ');
-        videoFullscreen.style.filter = newFilter;
-    });
 }
