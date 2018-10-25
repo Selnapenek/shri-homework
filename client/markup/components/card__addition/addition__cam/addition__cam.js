@@ -39,7 +39,7 @@ const safeParseInt = (val) => {
 };
 // Для того что бы достать значение яркости из css фильтра
 const safeParseFloat = (val) => {
-    return parseFloat(isNaN(val) ? val.replace(/[^\d\.]+/g, '') : val);
+    return parseFloat(isNaN(val) ? val.replace(/[^\d\\.]+/g, '') : val);
 };
 
 // Округление до 2 знака
