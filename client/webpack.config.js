@@ -12,17 +12,14 @@ const sourceMapsType = `#${sourceMapsDest}source-map`;
 
 let outputFileNameTemplate = '[name]';
 let modulesDirectories = ['node_modules'];
-let preLoaders = [
-    {
-        test: /\.js$/,
-        loader: 'source-map-loader'
-    }
-];
+let preLoaders = [{
+    test: /\.js$/,
+    loader: 'source-map-loader'
+}];
 let loaders = [{
     test: /\.json$/,
     loader: 'json'
-    }
-];
+}];
 let plugins = [
     new webpack.DefinePlugin({
         'process.env': {
@@ -64,23 +61,19 @@ if (tars.options.watch.isActive && tars.config.js.webpack.useHMR) {
 }
 
 if (tars.config.js.lint) {
-    preLoaders.push(
-        {
-            test: /\.js$/,
-            loaders: ['babel-loader', 'eslint-loader'],
-            include: `${cwd}/markup`
-        }
-    );
+    preLoaders.push({
+        test: /\.js$/,
+        loaders: ['babel-loader', 'eslint-loader'],
+        include: `${cwd}/markup`
+    });
 }
 
 if (tars.config.js.useBabel) {
-    loaders.push(
-        {
-            test: /\.(js|jsx)$/,
-            loader: 'babel',
-            include: /markup/
-        }
-    );
+    loaders.push({
+        test: /\.(js|jsx)$/,
+        loader: 'babel',
+        include: /markup/
+    });
 }
 
 /**
@@ -116,7 +109,9 @@ function prepareEntryPoints(entryConfig) {
 module.exports = {
     // We have to add some pathes to entry point in case of using HMR
     entry: prepareEntryPoints({
-        main: path.resolve(`${cwd}/markup/${staticFolderName}/js/main.js`)
+        main: path.resolve(`${cwd}/markup/${staticFolderName}/js/main.js`),
+        events: path.resolve(`${cwd}/markup/${staticFolderName}/js/events.js`),
+        cctv: path.resolve(`${cwd}/markup/${staticFolderName}/js/cctv.js`),
     }),
 
     output: {
@@ -129,7 +124,7 @@ module.exports = {
 
     watch: tars.options.watch.isActive && !tars.config.js.webpack.useHMR,
 
-    watchOptions:{
+    watchOptions: {
         aggregateTimeout: 100
     },
 
