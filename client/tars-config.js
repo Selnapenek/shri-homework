@@ -15,12 +15,13 @@ module.exports = {
     "js": {
         "workflow": "modular",
         "bundler": "webpack",
-        "lint": true,
-        "useBabel": true,
+        "lint": false,
+        "useBabel": false,
+        "useTypeScript": true,
         "removeConsoleLog": true,
         "webpack": {
             "useHMR": false,
-            "providePlugin": { 'Hls': 'hls.js' , 'd3' : 'd3'} 
+            "providePlugin": { 'Hls': 'hls.js', 'd3': 'd3'} 
         },
         "jsPathsToConcatBeforeModulesJs": [],
         "lintJsCodeBeforeModules": false,

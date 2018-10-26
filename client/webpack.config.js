@@ -76,6 +76,14 @@ if (tars.config.js.useBabel) {
     });
 }
 
+if (tars.config.js.useTypeScript) {
+    loaders.push({
+        test: /\.(ts|tsx)$/,
+        loader: 'ts-loader',
+        include: /markup/
+    });
+}
+
 /**
  * Add to each entry point entries for webpack dev-server and webpack-hot-middleware
  * @param  {Object} entryConfig
