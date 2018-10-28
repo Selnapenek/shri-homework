@@ -1,5 +1,13 @@
 export class VideoFilter {
-    constructor(videoContainer, filterInput, filterOption, defaultValue = 1) {
+    videoContainer: HTMLDivElement;
+    filterInput: HTMLInputElement;
+    filterOption: string;
+    defaultValue: string;
+
+    constructor(videoContainer : HTMLDivElement, 
+                filterInput : HTMLInputElement, 
+                filterOption : string, 
+                defaultValue : string = '1') {
         this.videoContainer = videoContainer;
         this.filterInput = filterInput;
         this.filterOption = filterOption;
@@ -9,17 +17,28 @@ export class VideoFilter {
     changeValue() {
         const optionValue = this.filterInput.value;
 
-        const prevFilter = getComputedStyle(this.videoContainer).filter;
-        let newFilter = prevFilter.split(' ');
+        const prevFilter : string | null = getComputedStyle(this.videoContainer).filter;
+        let prevFilterArray : string[];
+        let optionInex : number;
+        let newFilter: string;
 
-        const optionInex = newFilter.findIndex( (elem) => {
-            const regx = new RegExp(this.filterOption);
-            return regx.test(elem);
-        });
+        // ВОПРОС: что использовать проверки на null или просто if (prevFilter) ?
+        if (prevFilter != null) {
+            prevFilterArray = prevFilter.split(' ');
 
-        newFilter[optionInex] = this.filterOption + '(' + optionValue + ')';
-        newFilter = newFilter.join(' ');
-        this.videoContainer.style.filter = newFilter;
+            optionInex = prevFilterArray.findIndex( (elem : string) => {
+                const regx : RegExp = new RegExp(this.filterOption);
+                return regx.test(elem);
+            });
+
+            prevFilterArray[optionInex] = this.filterOption + '(' + optionValue + ')';
+            newFilter = prevFilterArray.join(' ');
+
+            this.videoContainer.style.filter = newFilter;
+        } else {
+            // TODO: Ошибку в лог, что отутствует filter
+        }
+
     }
 
     toDefaultValue() {
