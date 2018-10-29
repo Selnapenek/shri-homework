@@ -117,9 +117,9 @@ function prepareEntryPoints(entryConfig) {
 module.exports = {
     // We have to add some pathes to entry point in case of using HMR
     entry: prepareEntryPoints({
-        main: path.resolve(`${cwd}/markup/${staticFolderName}/js/main.js`),
-        events: path.resolve(`${cwd}/markup/${staticFolderName}/js/events.js`),
-        cctv: path.resolve(`${cwd}/markup/${staticFolderName}/js/cctv.js`),
+        main: path.resolve(`${cwd}/markup/${staticFolderName}/js/main.ts`),
+        events: path.resolve(`${cwd}/markup/${staticFolderName}/js/events.ts`),
+        cctv: path.resolve(`${cwd}/markup/${staticFolderName}/js/cctv.ts`),
     }),
 
     output: {
