@@ -1,8 +1,8 @@
 import Hls from 'hls.js';
-
-import {VideoFullscreen} from 'components/videoFullscreen/videoFullscreen.js';
-import {VideoFilter} from 'components/videoFilter/videoFilter.js';
-import {AudioLevel} from 'components/audioLevel/audioLevel.js';
+// TODO: написать алиасы в tsconfig.json
+import {VideoFullscreen} from 'components/videoFullscreen/videoFullscreen.ts';
+import {VideoFilter} from 'components/videoFilter/videoFilter.ts';
+import {AudioLevel} from 'components/audioLevel/audioLevel.ts';
 
 // Инциализаци HLS потока
 const initVideo = (video : HTMLVideoElement , url : string) => {

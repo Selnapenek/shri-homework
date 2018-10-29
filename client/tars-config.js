@@ -21,7 +21,10 @@ module.exports = {
         "removeConsoleLog": true,
         "webpack": {
             "useHMR": false,
-            "providePlugin": { 'Hls': 'hls.js', 'd3': 'd3'} 
+            "providePlugin": {
+                "Hls": "hls.js",
+                "d3": "d3"
+            }
         },
         "jsPathsToConcatBeforeModulesJs": [],
         "lintJsCodeBeforeModules": false,
@@ -60,6 +63,5 @@ module.exports = {
         "staticFolderName": "static",
         "imagesFolderName": "img",
         "componentsFolderName": "components"
-    },
-    "staticPrefix": "static/"
+    }
 };

@@ -1,6 +1,6 @@
-import menu from '../../components/menu/menu.js';
+// import menu from 'components/menu/menu.ts';
 // import main from '../../components/main/main.js';
 
-menu();
+// menu();
 // main();
 
