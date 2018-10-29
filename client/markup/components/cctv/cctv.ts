@@ -1,11 +1,11 @@
+import Hls from 'hls.js';
+
 import {VideoFullscreen} from 'components/videoFullscreen/videoFullscreen.js';
 import {VideoFilter} from 'components/videoFilter/videoFilter.js';
 import {AudioLevel} from 'components/audioLevel/audioLevel.js';
 
-const Hls = require('hls.js');
-
 // Инциализаци HLS потока
-const initVideo = (video, url) => {
+const initVideo = (video : HTMLVideoElement , url : string) => {
     if (Hls.isSupported()) {
         const hls = new Hls();
         hls.attachMedia(video);
@@ -47,29 +47,32 @@ const initVideo = (video, url) => {
     }
 };
 
+// TODO: на класс переписать, думаю и от ненужных проверок избавлюсь (как минимум передам их на увровень выше), и от лишнего typecast'a
 export default function () {
-    const cctv = document.querySelector('.cctv');
-    const cctvFullscreen = cctv.querySelector('.cctv__detail');
+    // ДА НЕ БУДУ я писать тысячу is-else, так как я в pug файле задаю view компонета - занчит уверен что querySelector не вернет null
+    // ВОПРОС: какой лучше использовать typecast : .. as type или <type> ?
+    const cctv : HTMLDivElement = document.querySelector('.cctv') as HTMLDivElement;
+    const cctvFullscreen : HTMLDivElement = <HTMLDivElement> cctv.querySelector('.cctv__detail');
 
-    let currentVideoFullscreen = null;
+    let currentVideoFullscreen : HTMLVideoElement | null = null;
 
-    const videoFullscreenContainer = cctvFullscreen.querySelector('.cctv__item');
-    const videoFullscreen = new VideoFullscreen(videoFullscreenContainer);
+    const videoFullscreenContainer : HTMLDivElement = cctvFullscreen.querySelector('.cctv__item') as HTMLDivElement;
+    const videoFullscreen : VideoFullscreen = new VideoFullscreen(videoFullscreenContainer);
     
     // Визуализация громости видео
-    const audioLevelContainer = cctv.querySelector('.cctv__detail__soundlevel');
-    const audioLevel = new AudioLevel(audioLevelContainer);
+    const audioLevelContainer : HTMLDivElement = cctv.querySelector('.cctv__detail__soundlevel') as HTMLDivElement;
+    const audioLevel : AudioLevel = new AudioLevel(audioLevelContainer);
 
     // Изменение яркости и контрастности
-    const filterInputBritness = cctv.querySelector('.filter_britness');
-    const videoFilterBritness = new VideoFilter(videoFullscreenContainer, filterInputBritness, 'brightness');
+    const filterInputBritness : HTMLInputElement = cctv.querySelector('.filter_britness') as HTMLInputElement;
+    const videoFilterBritness : VideoFilter = new VideoFilter(videoFullscreenContainer, filterInputBritness, 'brightness');
     videoFilterBritness.onChange();
 
-    const filterInputContrast = cctv.querySelector('.filter_contrast');
+    const filterInputContrast : HTMLInputElement = cctv.querySelector('.filter_contrast') as HTMLInputElement;
     const videoFilterContrast = new VideoFilter(videoFullscreenContainer, filterInputContrast, 'contrast');
     videoFilterContrast.onChange();
 
-    const videoContainers = cctv.querySelectorAll('.cctv__container .cctv__item video');
+    const videoContainers : NodeListOf<HTMLVideoElement> = cctv.querySelectorAll('.cctv__container .cctv__item video');
     // Массив обьектов в которых хранится ресурс видеопотока и контейнер видео
     const videoSrcAndContainer = [
         {
@@ -95,32 +98,38 @@ export default function () {
         initVideo(video.container, video.src);
 
         // На каждый видео элемент повесим событие открытия видео "на весь экран"
-        video.container.addEventListener('click', (ev) => {
-            cctv.classList.toggle('cctv_full');
-
-            currentVideoFullscreen = ev.target;
-            currentVideoFullscreen.muted = false;
-
-            // Анимация появления fullscreen
-            const dy = ev.y - cctvFullscreen.getBoundingClientRect().y;
-            cctvFullscreen.style.transformOrigin = ( ev.x + ev.target.clientWidth / 2 ) + 'px ' + dy + 'px';
-
-            // Продолжим воспроизведение видео с того же момента времени в большом окне
-            videoFullscreen.connecVideoSrc(currentVideoFullscreen);
-            videoFullscreen.continueFullscreenVideo();
-        
-            audioLevel.connectAudioSrc(currentVideoFullscreen);
-            audioLevel.createSvg();
-            audioLevel.initChart();
+        video.container.addEventListener('click', (ev : MouseEvent | PointerEvent) => {
+            if (ev.target) {
+                cctv.classList.toggle('cctv_full');
+                currentVideoFullscreen = <HTMLVideoElement> ev.target;
+                currentVideoFullscreen.muted = false;
+    
+                // Анимация появления fullscreen
+                //  ВОПРОС 
+                // почему getBoundingClientRect().y не могу воспльзоваться и приходится мучиться?
+                // типо такого (cctvFullscreen.getBoundingClientRect() as DOMRect ).y;  ???
+                const dy = ev.y - cctvFullscreen.getBoundingClientRect().top;
+                cctvFullscreen.style.transformOrigin = ( ev.x + currentVideoFullscreen.clientWidth / 2 ) + 'px ' + dy + 'px';
+    
+                // Продолжим воспроизведение видео с того же момента времени в большом окне
+                videoFullscreen.connecVideoSrc(currentVideoFullscreen);
+                videoFullscreen.continueFullscreenVideo();
+            
+                audioLevel.connectAudioSrc(currentVideoFullscreen);
+                audioLevel.createSvg();
+                audioLevel.initChart();
+            }
         });
     });
 
-    const closeFullscreenBtn = cctv.querySelector('.cctv__detail__icon');
+    const closeFullscreenBtn : HTMLElement = cctv.querySelector('.cctv__detail__icon') as HTMLElement;
 
     // Закроем окно fullscreen
     closeFullscreenBtn.addEventListener('click', () => {
+        if(currentVideoFullscreen) {
+            currentVideoFullscreen.muted = true;
+        }
         cctv.classList.toggle('cctv_full');
-        currentVideoFullscreen.muted = true;
         audioLevel.stopRenderChart();
         videoFullscreen.stopContinuePlay();
         videoFilterBritness.toDefaultValue();
