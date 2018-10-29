@@ -27,6 +27,7 @@
   <li>hw1,2/resposive desing & User input - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw1,2">тут</a></li>
   <li>hw3/multimedia  - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw3-multimedia">ВОТ ТУТ</a></li>
   <li>hm4/nodejs - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw4-nodejs">И тут</a></li>
+  <li>hm7/typescript - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw7-typescript">Печаль беда</a></li>
   </ul>
 
 
