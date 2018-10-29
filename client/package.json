@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/d3": "^5.0.1",
     "@types/hls.js": "^0.10.2",
+    "@types/webaudioapi": "0.0.27",
     "awesome-typescript-loader": "^5.2.1",
     "babel-preset-es2015": "^6.24.1",
     "gulp": "^3.9.1",
