@@ -1,13 +1,27 @@
 // TODO: заменить d3 на что-нибудь по легче/ почему-то визуалиция аудио на d3 дофига потребляет
-const d3 = require('d3');
-const AudioContext = window.AudioContext || window.webkitAudioContext;
+import d3 from "d3";
+
+// const AudioContext = window.AudioContext || window.webkitAudioContext;
+// [ts] Property 'webkitAudioContext' does not exist on type 'Window'.
+const AudioContext = window.AudioContext;
+
 
 export class AudioLevel {
-    constructor(audioLevelContainer) {
+    audioLevelContainer: HTMLDivElement;
+    audioContext: AudioContext;
+    sourceArray: MediaElementAudioSourceNode[];
+    currentSource: MediaElementAudioSourceNode | undefined;
+    analyser: AnalyserNode;
+    frequencyData: Uint8Array;
+    svg: d3.Selection<any, any, any, any>  | null; // сложна, проще d3 заменить
+    startRender: boolean;
+    rAF: number;
+
+    constructor(audioLevelContainer: HTMLDivElement) {
         this.audioLevelContainer = audioLevelContainer;
         this.audioContext = new AudioContext();
         this.sourceArray = [];
-        this.currentSource = -1;
+        this.currentSource = undefined;
         // Создаем анализатор
         this.analyser = this.audioContext.createAnalyser();
         this.analyser.fftSize = 32;
@@ -18,15 +32,21 @@ export class AudioLevel {
         this.rAF = -1;
     }
 
-    connectAudioSrc(audioSrc) {
-        this.currentSource = this.sourceArray.find( (element) => {
-            if (element.mediaElement === audioSrc) {
-                return element;
+    connectAudioSrc(audioSrc: HTMLMediaElement) {
+        this.currentSource = this.sourceArray.find(
+            (element: MediaElementAudioSourceNode) => {
+                if (element.mediaElement === audioSrc) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
-        });
+        );
 
         if (!this.currentSource) {
-            this.currentSource = this.audioContext.createMediaElementSource(audioSrc);
+            this.currentSource = this.audioContext.createMediaElementSource(
+                audioSrc
+            );
             this.sourceArray.push(this.currentSource);
         }
         // Привязываем все друг к дружке
@@ -35,10 +55,10 @@ export class AudioLevel {
     }
 
     createSvg() {
-        this.svg = d3.select(this.audioLevelContainer)
-            .select('svg')
-            .attr('width', '100%')
-            .attr('height', '100%');
+        this.svg = d3
+            .select(this.audioLevelContainer + " svg")
+            .attr("width", "100%")
+            .attr("height", "100%");
     }
 
     renderChart() {
@@ -46,31 +66,39 @@ export class AudioLevel {
             this.rAF = requestAnimationFrame(this.renderChart.bind(this));
         }
         this.updateData();
-        const data = this.frequencyData;
+        const data : number[] = [...this.frequencyData];
         // Update d3 chart with new data.
-        this.svg.selectAll('rect')
-            .data(data)
-            .attr('fill', (d) => {
-                return 'rgb(0, ' + d + ', ' + d + ')';
-            });
+        if (this.svg) {
+            this.svg
+                .selectAll("rect")
+                .data(data)
+                .attr("fill", (d: number) => {
+                    return "rgb(0, " + d + ", " + d + ")";
+                });
+        }
     }
 
     initChart() {
         // Create our initial D3 chart.
-        const data = this.frequencyData;
-        this.svg.selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
-            .attr('x', function (d, i) {
-                return (i * (100 / data.length)) + '%';
-            })
-            .attr('width', (100 / data.length - 1) + '%' )
-            .attr('height', '100%');
+        const data : number[] = [...this.frequencyData];
+        if (this.svg) {
+            this.svg
+                .selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", function(d: number, i: number) {
+                    return i * (100 / data.length) + "%";
+                })
+                .attr("width", 100 / data.length - 1 + "%")
+                .attr("height", "100%");
 
-        // Run the loop
-        this.startRender = true;
-        this.renderChart();
+            // Run the loop
+            this.startRender = true;
+            this.renderChart();
+        } else {
+            // Ошибку в лог, svg не инциализированно
+        }
     }
 
     // Copy frequency data to frequencyData array.
@@ -81,7 +109,9 @@ export class AudioLevel {
     stopRenderChart() {
         this.startRender = false;
         cancelAnimationFrame(this.rAF);
-        this.currentSource.disconnect();
+        if (this.currentSource) {
+            this.currentSource.disconnect();
+            this.currentSource = undefined;
+        }
     }
 }
-
