@@ -9,11 +9,14 @@
 <code>cd client</code><br>
 <code>npm install</code><br>
 <code>tars dev</code><br>
-Либо можете посмотреть
+<del>Либо можете посмотреть
 <ul>
   <li>https://selnapenek.github.io/shi-hm1-responsove-desing/</li>
   <li>https://selnapenek.github.io/shi-hm1-responsove-desing/cctv.html</li>
 </ul>
+</del>
+Не можете - не заливал на ghp. Но если желаете можете сами посмотреть какой продакш билд получается <code>tars build</code><br>
+
 
 
 <br>Серверная часть нахоидтся в папке server<br>
