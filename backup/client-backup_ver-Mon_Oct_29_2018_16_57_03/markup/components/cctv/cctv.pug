@@ -1,0 +1,26 @@
+include ../audioLevel/audioLevel.pug
+include ../videoFilter/videoFilter.pug
+include ../videoFullscreen/videoFullscreen.pug
+
+
+mixin cctv(data)
+    main.cctv
+        .cctv__title
+                h1 Видеонаблюдение
+        .cctv__container
+            .cctv__item
+                video(muted autoplay)
+            .cctv__item
+                video(muted autoplay)
+            .cctv__item
+                video(muted autoplay)
+            .cctv__item
+                video(muted autoplay)
+        .cctv__detail
+            +videoFullscreen()(class="cctv__item")
+            .cctv__detail__right
+                .cctv__detail__filters
+                    +videoFilter("Яркость", "filter_britness")
+                    +videoFilter("Контраст", "filter_contrast")
+                +audioLevel()(class="cctv__detail__soundlevel")
+            .cctv__detail__icon.icon_cross

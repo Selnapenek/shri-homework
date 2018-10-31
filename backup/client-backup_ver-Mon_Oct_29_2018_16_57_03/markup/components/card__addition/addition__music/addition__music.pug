@@ -1,0 +1,15 @@
+mixin addition__music(data)
+    .addition__music
+        .addition__music__row
+            .addition__music__img
+                    img(src="__static__img/assets/card__addition/addition__music/album-cover.png" alt="").img_responsive.img_br20
+            .addition__music__col
+                .addition__music__row.addition__music__track_name #{data.artist} - #{data.track.name}
+                input(type='range').addition__music__row.addition__music__range_track 
+            .addition__music__row.addition__music__length #{data.track.length}
+        .addition__music__row
+            .addition__music__btn_prev.icon.icon_prev-btn 
+            .addition__music__btn_next.icon.icon_next-btn
+            input(type='range').addition__music__range_vol
+            .addition__music__vol #{data.volume}%
+
