@@ -1,0 +1,128 @@
+.addition__cam {
+    margin-top: 30px;
+    border-radius: 20px;
+    width: 100%;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+    -webkit-overflow-scrolling: none;
+    -webkit-touch-callout: none;  
+    
+    // если не через img
+    .addition__cam__img{
+        background: url('%=static=%assets/card__addition/addition__cam/image.jpg') no-repeat;
+        background-size: cover;
+        transform: scale(0.78);
+        transform-origin: 0 0;
+        filter: brightness(50%);
+        transition: ease;
+        width: 200%;
+        height: 200%;
+        position: absolute;
+        // top: -25%;
+        // left: -25%;
+        margin: auto;
+        touch-action: none;
+        -webkit-overflow-scrolling: none;
+        -webkit-touch-callout: none;  
+    }
+}
+
+.addition__fridge {
+
+    @media screen and (max-width: $break-point_mb) {
+        justify-content: space-between;
+    }
+
+    @media screen and (min-width: $break-point_mb) and (max-width: $break-point_tb) {
+        justify-content: space-between;
+    }
+
+    .button:first-child{
+        margin-right: 2rem;
+    }
+}
+
+.addition__thermal {
+
+    @media screen and (max-width: $break-point_lp) {
+        justify-content: space-between;
+    }
+}
+
+// ммм, наверное лучше обобщить эти классы...
+.addition__thermal__temperature, .addition__thermal__humidity, .addition__cam__zoom, .addition__cam__brightness {
+    display: flex;
+    font-size: 1.125rem;
+    .addition__thermal__title, .addition__optional__title {
+        margin-right: 9px;
+    }
+    .addition__thermal__value {
+        font-weight: bold;
+    }
+}
+.addition__thermal__temperature {
+    margin-right: 50px;
+}
+
+.addition__cam__options {
+    display: none;
+
+    @media screen and (max-width: $break-point_mb) {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px;
+    }
+}
+
+.addition__music {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+
+    .addition__music__row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .addition__music__col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .addition__music__range_vol{
+        max-width: 219px;
+        min-width: 100px;
+        flex: 1 1 0;
+
+        @media screen and (max-width: $break-point_mb) {
+            max-width: 93px;
+            min-width: 92px;
+        }
+    }
+
+    .addition__music__range_track{
+        max-width: 350px;
+        min-width: 190px;
+    }
+
+    .addition__music__track_name {
+
+        @media screen and (max-width: $break-point_mb) {
+            fwhite-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+        }
+    }
+
+    .addition__music__length, .addition__music__vol{
+        font-size: 0.8rem;
+        color: #D8D8D8;
+    }
+}
+
+
+
