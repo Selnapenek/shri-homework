@@ -1,0 +1,54 @@
+// Mixins.
+
+@mixin nl {
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+    list-style: none;
+    list-style-position: outside;
+}
+
+@mixin cf {
+    &:before,
+    &:after {
+        display: table;
+        content: "";
+    }
+
+    &:after {
+        clear: both;
+    }
+
+    .lt-ie8 & {
+        zoom: 1;
+    }
+}
+
+@mixin blocks-justify {
+    text-align: justify;
+    text-justify: newspaper;
+}
+
+// You can add your own mixins here:
+
+@mixin grid-cl6 {
+    display: grid;
+    grid-template-columns: repeat(6, 150px);
+    grid-gap: 20px;
+
+    // Mobile
+    @media screen and (max-width: $break-point_mb) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // Tablets - Laptop
+    @media screen and (min-width: $break-point_mb) and (max-width: $break-point_lp) {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    // 2k display
+    @media screen and (min-width: $break-point_d) {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}

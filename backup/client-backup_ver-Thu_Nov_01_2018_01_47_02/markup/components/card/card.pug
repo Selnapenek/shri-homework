@@ -1,0 +1,26 @@
+include ../card__addition/card__addition.pug
+
+mixin card(data)
+    -var warning = data.type ==  'critical' ? ' card__warning' : '';
+    .card(class='card_' + data.size + warning)
+        .card__row
+            .card__icon
+                -var warningIcon = data.type == 'critical' ? '-warning' : '';
+                div(class='icon_' + data.icon + warningIcon)
+            .two-lines-text
+                .card__title #{data.title}
+        .card__row.card__row_beween
+            .card__source #{data.source}
+            .card__time #{data.time}
+        if data.description || data.data
+            .card__info
+                if data.description
+                    .card__description #{data.description}
+                if data.data
+                    +card__addition(data.icon, data.data)
+        .card__btns
+            .card__close.icon_cross
+            .card__next.icon_next
+            
+
+        

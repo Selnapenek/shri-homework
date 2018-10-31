@@ -1,0 +1,24 @@
+.header {
+  height: 92px;
+  padding: 0 42px;
+  border-bottom: 1px solid #F0F0F0;
+
+  display: grid;
+  grid-template-areas: 
+    " logo logo logo  menu menu menu menu menu menu_icon";
+  grid-template-columns: repeat(9, 1fr);
+  grid-gap: 42px;
+
+  align-items: center;
+
+  @media screen and (max-width: $break-point_mb) {
+    height: 50px;
+    border: none;
+    position: fixed;
+    background: white;   
+    z-index: 1200;
+    grid-template-columns: repeat(12, 1fr);
+
+  }
+
+}
