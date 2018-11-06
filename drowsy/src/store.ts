@@ -17,7 +17,7 @@ export class Store {
         const localValue: string | null = this.storage.getItem("drowsy");
 
         if (localValue) {
-            this.stateStore = JSON.parse(localValue);
+            this.stateStore = new Map(JSON.parse(localValue));
         } else {
             this.stateStore = new Map();
         }
@@ -28,14 +28,10 @@ export class Store {
 
     public setState(stateName: StateName, stateData: StateData) {
         let curState = this.stateStore.get(stateName);
-        if (curState) {
-            curState.setState(stateData);
-        } else {
-            curState = new State(stateName, stateData);
-            this.stateStore.set(stateName, curState);
-        }
+        curState = new State(stateName, stateData);
+        this.stateStore.set(stateName, curState);
 
-        const serialObj = JSON.stringify(this.stateStore);
+        const serialObj = JSON.stringify([...this.stateStore]);
         this.storage.setItem("drowsy", serialObj);
     }
 
@@ -61,7 +57,7 @@ export class Store {
     }
 
     public mutate(cbName: CallbackName, args: ActionData) {
-        const prevStateStore = this.stateStore;
+        const prevStateStore = new Map(this.stateStore);
         this.doCallback(cbName, args);
         // почему-то кажется что вся обертка над cb лишняя и что можно получать новые данные в конце cb
         const newStateStore = this.stateStore;
