@@ -16,3 +16,4 @@ phantomjsdriver.log
 **/svg-sprite.*
 
 .vscode
+client/builds
