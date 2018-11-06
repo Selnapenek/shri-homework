@@ -28,6 +28,8 @@
   <li>hw3/multimedia  - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw3-multimedia">ВОТ ТУТ</a></li>
   <li>hm4/nodejs - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw4-nodejs">И тут</a></li>
   <li>hm7/typescript - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw7-typescript">Печаль беда</a></li>
+    <li>hm8/framework - <a href="https://github.com/Selnapenek/shi-hm1-responsove-desing/wiki/hw8-framework">Описание мой медленной библеотеки</a></li>
+
 
   </ul>
 
