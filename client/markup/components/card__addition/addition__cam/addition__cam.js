@@ -1,3 +1,7 @@
+import { Drowsy } from 'static/js/libraries/drowsy';
+import { View } from 'static/js/libraries/drowsy/View';
+
+const flux = new Drowsy();
 
 // Расстояния между первым косанием и движением
 const getDiffXY = (startX, startY, x, y) => {
@@ -82,9 +86,10 @@ const changeElementTransform = (el, value, limitationMinMax) => {
     el.style.transform = 'matrix(' + newValue + ')';
 };
 
-class AdditionCam {
+class AdditionCam extends View {
 
     constructor() {
+        super();
         this.currentState = null; // Координаты x,y нажатия
         this.evCache = [];
         this.prevDiff = -1;
@@ -99,6 +104,7 @@ class AdditionCam {
             offsetY: 0
         };
         this.gesture = null;
+
     }
 
     init(cam, camContainer) {
@@ -249,7 +255,7 @@ class AdditionCam {
             [NaN, NaN, NaN, NaN, -1 * limitX, -1 * limitY],
             [NaN, NaN, NaN, NaN, 0, 0]
         ];
-        changeElementTransform(this.el, martix, limit);
+        flux.doAction('change-position-action', 'cam', { martix, limit});
     }
 
     procGesturePinch(curDiff, clientWidth, clientHeight) {
@@ -276,6 +282,16 @@ class AdditionCam {
         ];
         changeElementTransform(this.el, martixClr, limitClr);
     }
+
+    update(data) {
+        switch (data[0].stateName) {
+            case 'change-position':
+                changeElementTransform(this.el, data[0].stateData.martix, data[0].stateData.limit);
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 
@@ -286,8 +302,12 @@ export default function () {
     const brightValue = document.querySelector('.addition__cam__brightness .addition__optional__value');
 
     const additionCam = new AdditionCam(cam);
-
     additionCam.init(cam, camContainer);
+
+    flux.addView('cam', additionCam);
+    flux.addActionToView('change-position-action', 'cam');
+    flux.registrateCallback('camChangePosition', camChangePosition, 'change-position-action');
+    flux.store.subscribe('cam', 'change-position');
 
     // Отслеживаие изменения стилей css
     const mutationObserver = new MutationObserver(function (mutations) {
@@ -304,4 +324,8 @@ export default function () {
 
     const mutationConfig = { attributes: true };
     mutationObserver.observe(cam, mutationConfig);
+}
+
+function camChangePosition(args) {
+    flux.store.setState("change-position", args);
 }

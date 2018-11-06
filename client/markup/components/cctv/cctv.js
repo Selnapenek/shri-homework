@@ -1,6 +1,8 @@
 import {VideoFullscreen} from 'components/videoFullscreen/videoFullscreen.js';
 import {VideoFilter} from 'components/videoFilter/videoFilter.js';
 import {AudioLevel} from 'components/audioLevel/audioLevel.js';
+// import {Drowsy} from 'static/js/libraries/drowsy';
+
 
 const Hls = require('hls.js');
 
