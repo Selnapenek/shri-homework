@@ -40,7 +40,7 @@ class Store {
         this.callbackMap.set(cbName, cb);
     }
     mutate(cbName, args) {
-        const prevStateStore = this.stateStore;
+        const prevStateStore = new Map(this.stateStore);
         this.doCallback(cbName, args);
         // почему-то кажется что вся обертка над cb лишняя и что можно получать новые данные в конце cb
         const newStateStore = this.stateStore;
