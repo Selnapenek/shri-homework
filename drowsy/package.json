@@ -1,0 +1,22 @@
+{
+  "name": "drowsy",
+  "version": "1.0.0",
+  "description": "Simple Flux framework",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.6"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha test/**/*.test.js"
+  },
+  "author": "Solomin Vyacheslav",
+  "license": "ISC"
+}
