@@ -8,7 +8,7 @@ export class Action {
     private type: ActionType;
     private data: ActionData;
 
-    constructor(type: ActionType = "defultAction", data: ActionData = null) {
+    constructor(type: ActionType = "defaultAction", data: ActionData = null) {
         this.type = type;
         this.data = data;
     }

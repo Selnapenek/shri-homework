@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "mocha test/**/*.test.js"
+    "test": "mocha 'test/**/*.test.js'"
   },
   "author": "Solomin Vyacheslav",
   "license": "ISC"

@@ -12,8 +12,8 @@ export class Store {
     private callbackMap: Map<CallbackName, Callback>;
     private viewSubscribers: Map<ViewName, StateName[]>;
 
-    constructor() {
-        this.storage = window.localStorage;
+    constructor(storage: Storage = window.localStorage) {
+        this.storage = storage;
         const localValue: string | null = this.storage.getItem("drowsy");
 
         if (localValue) {

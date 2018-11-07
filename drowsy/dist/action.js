@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // На лекции говорилось что надо через абстрактный класс реализовывать
 // ммм непонятно почему, а точнее как и зачем
 class Action {
-    constructor(type = "defultAction", data = null) {
+    constructor(type = "defaultAction", data = null) {
         this.type = type;
         this.data = data;
     }

@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const state_1 = require("./state");
 class Store {
-    constructor() {
-        this.storage = window.localStorage;
+    constructor(storage = window.localStorage) {
+        this.storage = storage;
         const localValue = this.storage.getItem("drowsy");
         if (localValue) {
             this.stateStore = new Map(JSON.parse(localValue));
@@ -40,7 +40,7 @@ class Store {
         this.callbackMap.set(cbName, cb);
     }
     mutate(cbName, args) {
-        const prevStateStore = this.stateStore;
+        const prevStateStore = new Map(this.stateStore);
         this.doCallback(cbName, args);
         // почему-то кажется что вся обертка над cb лишняя и что можно получать новые данные в конце cb
         const newStateStore = this.stateStore;
