@@ -1,0 +1,39 @@
+
+.Footer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    background-color: white;
+    padding: 15px;
+    border-top: 1px solid #F0F0F0;
+    margin-top: 40px;
+  }
+  
+  .Footer .Footer-Left {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-left: 40px;
+  }
+  
+  .Footer .Footer-Right {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-right: 36px;
+  }
+  
+  .Footer .Footer-Item {
+    color: #858585;
+    font-size: 0.75rem;
+    padding: 10px;
+  }
+  
+  @media screen and (max-width: 676px) {
+    .Footer {
+      display: none;
+    }
+  }

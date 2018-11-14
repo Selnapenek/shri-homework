@@ -1,5 +1,7 @@
 import React from 'react';
 import { cn } from '@bem-react/classname';
+import './Footer.css';
+
 const footerItems  = require('./data.json').footerItems;
 
 const cnFooter = cn('Footer');

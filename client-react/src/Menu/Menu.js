@@ -1,5 +1,7 @@
 import React from 'react';
 import { cn } from '@bem-react/classname';
+import './Menu.css';
+
 const menuItems  = require('./data.json').menuItems;
 
 const cnMenu = cn('Menu');

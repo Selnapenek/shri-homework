@@ -1,0 +1,239 @@
+.Icon_type_ac-warning {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -511px;
+    width: 48px;
+    height: 41px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_ac {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -466px;
+    width: 48px;
+    height: 41px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_battery {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -806px;
+    width: 48px;
+    height: 25px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_cam-warning {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -660px;
+    width: 48px;
+    height: 36px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_cam {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -700px;
+    width: 48px;
+    height: 36px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_close-copy {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -909px;
+    width: 10px;
+    height: 16px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_cross-white {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -969px;
+    width: 14px;
+    height: 14px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_cross {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -987px;
+    width: 14px;
+    height: 14px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_fridge {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -608px;
+    width: 39px;
+    height: 48px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_google-home {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -773px;
+    width: 48px;
+    height: 29px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_hot-kettle {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -414px;
+    width: 41px;
+    height: 48px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_kettle {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -362px;
+    width: 41px;
+    height: 48px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_key {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -313px;
+    width: 48px;
+    height: 45px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_line-chart {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -862px;
+    width: 48px;
+    height: 23px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_music {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -556px;
+    width: 40px;
+    height: 48px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_next-white {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -949px;
+    width: 10px;
+    height: 16px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_next {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -889px;
+    width: 10px;
+    height: 16px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_prev-btn {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -4px;
+    width: 53px;
+    height: 52px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_next-btn {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -4px;
+    width: 53px;
+    height: 52px;
+    background-repeat: no-repeat;
+    -webkit-transform: scale(-1, -1);
+    transform: scale(-1, -1);
+}
+
+.Icon_type_robot-cleaner {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -740px;
+    width: 48px;
+    height: 29px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_router {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -214px;
+    width: 48px;
+    height: 46px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_shape {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -929px;
+    width: 10px;
+    height: 16px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_smart-home {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -264px;
+    width: 48px;
+    height: 45px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_stats {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -835px;
+    width: 48px;
+    height: 23px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_temperature {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -112px;
+    width: 48px;
+    height: 48px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_thermal {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -60px;
+    width: 48px;
+    height: 48px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_wifi {
+    background-image: url("../img/svg-sprite/sprite.svg");
+    background-position: -4px -164px;
+    width: 48px;
+    height: 46px;
+    background-repeat: no-repeat;
+}
+
+.Icon_type_logo {
+    grid-area: "logo";
+    background-image: url(../img/png-sprite/96dpi/sprite.png);
+    background-position: 0px 0px;
+    width: 108px;
+    height: 27px;
+    background-size: 108px, 45px;
+    background-repeat: no-repeat;
+  }
+  
+  @media screen and (-webkit-min-device-pixel-ratio: 2), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx), only screen and (min-device-pixel-ratio: 2) {
+    .Icon_type_logo {
+      background-image: url(../img/png-sprite/192dpi/sprite.png);
+    }
+  }
+  
+  @media screen and (max-width: 375px) {
+    .Icon_type_logo {
+      margin-left: 20px;
+    }
+  }

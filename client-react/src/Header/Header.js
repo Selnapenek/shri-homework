@@ -2,6 +2,7 @@ import React from 'react';
 import Menu from '../Menu/Menu';
 import Logo from '../Logo/Logo'
 import { cn } from '@bem-react/classname';
+import './Header.css';
 
 const cnHeader = cn('Header');
 

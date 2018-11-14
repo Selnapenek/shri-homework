@@ -1,0 +1,88 @@
+.Menu {
+    grid-area: "menu";
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.Menu .Menu-Item {
+    font-size: 1rem;
+    opacity: 0.6;
+    line-height: 20px;
+    font-weight: 600;
+    margin: 10px;
+}
+
+.Menu .Menu-Item_active {
+    opacity: 1;
+}
+
+.Menu .Menu-Item_active .Menu-Link {
+    color: #333333;
+}
+
+@media screen and (max-width: 375px) {
+    .Menu {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        position: fixed;
+        right: 0px;
+        padding: 10px;
+        background: white;
+        border-radius: 20px;
+        margin-top: 40px;
+        height: 0;
+        visibility: hidden;
+        opacity: 0;
+        -webkit-transition: visibility 0s, opacity 0.5s linear;
+        transition: visibility 0s, opacity 0.5s linear;
+        -ms-flex-item-align: end;
+        align-self: flex-end;
+        -webkit-box-align: end;
+        -ms-flex-align: end;
+        align-items: end;
+    }
+}
+
+.Menu-Icon {
+    background-image: url(../img/png-sprite/96dpi/sprite.png);
+    background-position: 0px -31px;
+    width: 16px;
+    height: 14px;
+    background-size: 108px, 45px;
+    background-repeat: no-repeat;
+    display: none;
+    cursor: pointer;
+    grid-area: 'menu_icon';
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx),
+only screen and (min-device-pixel-ratio: 2) {
+    .Menu-Icon {
+        background-image: url(../img/png-sprite/192dpi/sprite.png);
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .Menu-Icon {
+        display: initial;
+        grid-column: 4;
+    }
+}
+
+.Menu_show {
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+}
