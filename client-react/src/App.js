@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
+import { cn } from '@bem-react/classname';
+import { withBemMod } from '@bem-react/core';
 import logo from './logo.svg';
 import './App.css';
+import Events from './Events/Events';
+import Header from './Header/Header';
+import Footer from './Footer/Footer';
 
 class App extends Component {
   render() {
+    const cnPage = cn('Page');
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div className={cnPage()}>
+        <Header />
+
+        <Events />
+
+        <Footer />
+
       </div>
     );
   }
