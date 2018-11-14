@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bem-react/classname": "^1.1.1",
+    "@bem-react/core": "^1.2.0",
+    "@bem-react/di": "^1.0.3",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1"
