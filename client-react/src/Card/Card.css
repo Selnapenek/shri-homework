@@ -1,0 +1,243 @@
+.Card {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    border-radius: 20px;
+    background: #FAFAFA;
+    padding: 0 20px 20px 20px;
+    -webkit-transition: 0.3s ease;
+    transition: 0.3s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+}
+
+.Card:hover {
+    -webkit-box-shadow: 0 2px 6px 0 rgba(197, 186, 186, 0.5);
+    box-shadow: 0 2px 6px 0 rgba(197, 186, 186, 0.5);
+    border-color: #F3F3F3;
+}
+
+.Card:hover .Card-Btns {
+    visibility: visible;
+    opacity: 1;
+}
+
+.Card .Card-Btns {
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
+}
+
+@media screen and (max-width: 676px) {
+    .Card .Card-Btns {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 676px) and (max-width: 1200px) {
+    .Card .Card__Btns {
+        display: none;
+    }
+}
+
+.Card .Card-Close,
+.Card .Card-Next {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+}
+
+.Card .Card-Close {
+    top: 15px;
+}
+
+.Card .Card-Next {
+    bottom: 15px;
+}
+
+@media screen and (max-width: 676px) {
+    .Card {
+        margin-bottom: 15px;
+    }
+}
+
+@media screen and (min-width: 1880px) {
+    .Card {
+        padding: 15px 35px 35px 35px;
+    }
+}
+
+.Card .Card-Info {
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 676px) {
+    .Card .Card-Info {
+        margin-top: 5px;
+    }
+}
+
+@media screen and (min-width: 676px) and (max-width: 850px) {
+    .Card .Card-Info {
+        margin-top: 10px;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .Card .Card-Info {
+        margin-top: 25px;
+    }
+}
+
+.Card .Card-Row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 20px;
+}
+
+.Card .Card-Row_bettwen {
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.Card .Card-Icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    -ms-flex-item-align: center;
+    align-self: center;
+}
+
+.Card .Card-Title {
+    font-size: 1.5rem;
+    -ms-flex-item-align: center;
+    align-self: center;
+}
+
+.Card .Card-Source {
+    font-size: 1.125rem;
+}
+
+.Card .Card-Time {
+    font-size: 1.125rem;
+}
+
+.Card .Card-Description {
+    padding-top: 10px;
+    font-size: 1.25rem;
+    color: #000000;
+}
+
+.Card_type_critical {
+    padding-top: 5px;
+    padding-bottom: 0;
+    background-color: #DB5341;
+}
+
+.Card_type_critical .Card-Icon,
+.Card_type_critical .Card-Title,
+.Card_type_critical .Card-Source,
+.Card_type_critical .Card-Time {
+    color: #FFFFFF;
+}
+
+.Card_type_critical .Card-Row {
+    margin: 15px 0px;
+}
+
+.Card_type_critical .Card-Info {
+    margin-top: auto;
+    margin-right: -22px;
+    margin-left: -22px;
+    margin-bottom: -1px;
+    padding: 10px 20px;
+    background-color: #FAFAFA;
+    border-radius: 20px 20px 20px 20px;
+}
+
+@media screen and (min-width: 1880px) {
+    .Card_type_critical .Card-Info {
+        margin: auto -37px -2px -37px;
+    }
+}
+
+.Card_size_s {
+    grid-column: span 2;
+}
+
+.Card_size_s .Card-Row_bettwen {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+@media screen and (max-width: 676px) {
+    .Card_size_s .CCard-Row_bettwen {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+}
+
+@media screen and (min-width: 1880px) {
+    .Card_size_s .Card-Row_bettwen {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+}
+
+.Card_size_s .Card-Source {
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 676px) {
+    .Card_size_s .Card-Source {
+        margin-bottom: 0;
+    }
+}
+
+@media screen and (min-width: 1880px) {
+    .Card_sise_s .Card-Source {
+        margin-bottom: 0;
+    }
+}
+
+.Card_size_m {
+    grid-column: span 3;
+    grid-row: span 2;
+}
+
+.Card_size_l {
+    grid-column: span 4;
+    grid-row: span 3;
+}
+
+.Card_size_l .Card-Info {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 50%;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
